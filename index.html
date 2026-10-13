@@ -72,8 +72,9 @@
   /* Sponsors placeholder section */
   .sponsors { margin-top:24px; padding:18px; border:1px dashed #b7eaff88; border-radius:18px; text-align:center; color:#cceeff; }
   .sponsors strong { display:block; margin-bottom:8px; }
-  .sponsor-slots { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
-  .logo-slot { width:120px; height:48px; display:grid; place-items:center; border:1px solid #ffffff44; border-radius:8px; color:#cceeff99; font-size:.8rem; }
+  .sponsor-slots { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }
+  .logo-slot { width:120px; height:48px; display:grid; place-items:center; border:1px solid #ffffff44; border-radius:8px; color:#cceeff99; font-size:.8rem; background:#ffffff0d; overflow:hidden; padding:4px; }
+  .logo-slot img { max-width:100%; max-height:100%; object-fit:contain; }
   
   /* Welcome card response page view */
   .page { display:none; text-align:center; min-height:68vh; align-items:center; justify-content:center; }
@@ -140,10 +141,13 @@
         <p class="hint" id="hint" aria-live="polite"></p>
       </form>
     </div>
-    <section class="sponsors" aria-label="Branch sponsor logos placeholder">
+    <section class="sponsors" aria-label="Branch sponsor logos">
       <strong>Branch Sponsors</strong>
       <div class="sponsor-slots">
-        <div class="logo-slot">Sponsor logo</div><div class="logo-slot">Sponsor logo</div><div class="logo-slot">Sponsor logo</div>
+        <!-- First sponsor logo added here -->
+        <div class="logo-slot"><img src="image_166237.png" alt="S' Society Sponsor Logo"></div>
+        <div class="logo-slot">Sponsor logo</div>
+        <div class="logo-slot">Sponsor logo</div>
       </div>
     </section>
     <div class="footer">IEEE AAST Cairo Student Branch · One family, many possibilities</div>
