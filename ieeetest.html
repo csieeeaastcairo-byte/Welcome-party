@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IEEE AAST Cairo Family</title>
+<style>
+  /* Root variables for brand colors */
+  :root { --ieee-blue:#00629B; --deep-blue:#032B50; --sky:#54c8f5; --white:#fff; }
+  
+  /* Global reset and box-sizing */
+  * { box-sizing:border-box; }
+  
+  /* Page body styling with dynamic gradient background */
+  body { margin:0; min-height:100vh; font-family:Arial,Helvetica,sans-serif; color:#fff;
+    background:radial-gradient(circle at 15% 15%, #167db3 0, transparent 35%),
+               linear-gradient(135deg,#041b35,#064a78 60%,#071d37);
+    overflow-x:hidden; }
+  
+  /* Background decorative text watermark */
+  body::before { content:"IEEE   IEEE   IEEE   IEEE"; position:fixed; inset:0; display:flex;
+    align-items:center; justify-content:center; font-weight:900; font-size:clamp(3rem,12vw,10rem);
+    color:rgba(255,255,255,.035); transform:rotate(-25deg); pointer-events:none; white-space:nowrap; z-index:0; }
+  
+  /* Main content wrapper container */
+  .shell { position:relative; z-index:1; width:min(960px,92%); margin:0 auto; padding:34px 0 26px; }
+  
+  /* Header section styling with entry animation */
+  header { text-align:center; animation:fadeDown .9s ease both; }
+  h1 { margin:8px 0 10px; color:#fff; font-size:clamp(2rem,5vw,3.5rem); line-height:1.1; text-shadow:0 0 24px #38bdf8aa; }
+  .subtitle { margin:0 0 26px; color:#8edcff; font-size:clamp(1.05rem,2.6vw,1.55rem); font-weight:700; letter-spacing:.04em; }
+  
+  /* Circular IEEE logo badge */
+  .ieee-mark { display:inline-flex; align-items:center; justify-content:center; border:2px solid #8edcff; border-radius:50%; width:54px; height:54px; font-weight:900; color:#8edcff; letter-spacing:-2px; }
+  
+  /* Translucent glassmorphism panel for the form */
+  .panel { background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.22); border-radius:24px;
+    padding:clamp(22px,4vw,38px); backdrop-filter:blur(12px); box-shadow:0 20px 60px #00101f66; }
+  
+  label, legend { display:block; font-weight:700; margin-bottom:12px; font-size:1.05rem; }
+  
+  /* Text input field styling */
+  input[type="text"] { width:100%; padding:15px 16px; border-radius:12px; border:2px solid transparent; outline:none;
+    font-size:1rem; color:#082b46; background:#fff; transition:border-color .2s,box-shadow .2s; }
+  input[type="text"]:focus { border-color:#59d5ff; box-shadow:0 0 0 4px #59d5ff30; }
+  
+  fieldset { border:0; padding:0; margin:24px 0 0; }
+  
+  /* Grid layout for society choices */
+  .choices { display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:12px; }
+  .choice { position:relative; }
+  .choice input { position:absolute; opacity:0; }
+  
+  /* Individual society selection cards */
+  .choice label { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; min-height:100px;
+    margin:0; padding:14px 10px; border:1px solid #ffffff45; border-radius:15px; background:#ffffff0d; cursor:pointer;
+    transition:transform .2s,background .2s,border-color .2s; text-align:center; }
+  .choice label:hover { transform:translateY(-3px); background:#ffffff18; }
+  .choice input:checked + label { border-color:#76dcff; background:#087ab577; box-shadow:0 0 0 2px #76dcff33; }
+  .choice .emoji { font-size:1.8rem; }
+  
+  .actions { display:flex; justify-content:center; margin-top:26px; }
+  
+  /* Submit and action buttons */
+  button { border:0; border-radius:999px; padding:14px 28px; background:#fff; color:#005587; font-size:1rem; font-weight:800; cursor:pointer;
+    box-shadow:0 8px 25px #00101f55; transition:transform .2s,background .2s; }
+  button:hover { transform:translateY(-2px) scale(1.02); background:#c9f2ff; }
+  button:focus-visible { outline:3px solid #80e1ff; outline-offset:4px; }
+  
+  .hint { text-align:center; color:#d4efff; min-height:22px; margin:12px 0 0; }
+  
+  /* Sponsors placeholder section */
+  .sponsors { margin-top:24px; padding:18px; border:1px dashed #b7eaff88; border-radius:18px; text-align:center; color:#cceeff; }
+  .sponsors strong { display:block; margin-bottom:8px; }
+  .sponsor-slots { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+  .logo-slot { width:120px; height:48px; display:grid; place-items:center; border:1px solid #ffffff44; border-radius:8px; color:#cceeff99; font-size:.8rem; }
+  
+  /* Welcome card response page view */
+  .page { display:none; text-align:center; min-height:68vh; align-items:center; justify-content:center; }
+  .page.active { display:flex; animation:fadeUp .7s ease both; }
+  .welcome-card { width:100%; padding:clamp(28px,6vw,60px) 20px; border-radius:26px; border:1px solid #ffffff30; background:#061a2fc9; box-shadow:0 20px 70px #0005; }
+  .welcome-card h2 { font-size:clamp(2rem,6vw,4rem); margin:0 0 14px; }
+  .welcome-card p { color:#c8edff; font-size:1.15rem; }
+  .theme-art { font-size:clamp(3rem,9vw,6rem); margin:20px 0; filter:drop-shadow(0 0 18px #7adfff55); }
+  
+  .back { margin-top:22px; background:transparent; color:#fff; border:1px solid #ffffff77; box-shadow:none; }
+  .footer { text-align:center; color:#b8dff4a8; font-size:.82rem; margin-top:22px; }
+  
+  /* Dynamic flying emoji and sparkle animation elements */
+  .flyer { position:fixed; z-index:10; left:-10vw; top:var(--top,50%); font-size:clamp(2rem,5vw,3.5rem); pointer-events:none;
+    animation:flyAcross 2.2s cubic-bezier(.2,.65,.3,1) forwards; filter:drop-shadow(0 4px 8px #001b35aa); }
+  .sparkle { position:fixed; pointer-events:none; z-index:9; width:8px; height:8px; border-radius:50%; background:#a8eeff; animation:pop .8s ease-out forwards; }
+  
+  /* Dynamic color theme backgrounds based on selected society */
+  body.theme-cs { background:radial-gradient(circle at 80% 20%,#117cba,transparent 35%),linear-gradient(135deg,#041b35,#052d58); }
+  body.theme-ras { background:radial-gradient(circle at 75% 15%,#7348bd,transparent 34%),linear-gradient(135deg,#10132f,#143b66); }
+  body.theme-pes { background:radial-gradient(circle at 80% 15%,#2b9b78,transparent 35%),linear-gradient(135deg,#062c3a,#125b66); }
+  body.theme-ies { background:radial-gradient(circle at 80% 15%,#b88728,transparent 35%),linear-gradient(135deg,#171c35,#164f72); }
+  body.theme-events { background:radial-gradient(circle at 80% 15%,#c44d91,transparent 35%),linear-gradient(135deg,#24143f,#075078); }
+  body.theme-hr { background:radial-gradient(circle at 80% 15%,#477bd2,transparent 35%),linear-gradient(135deg,#101d3d,#164f72); }
+  body.theme-branding { background:radial-gradient(circle at 80% 15%,#bc7a37,transparent 35%),linear-gradient(135deg,#211638,#075078); }
+  
+  /* Keyframe animations for page elements */
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-22px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes flyAcross { 0%{left:-10vw;transform:translateY(20px) rotate(-15deg) scale(.75);opacity:0}
+    12%{opacity:1} 50%{transform:translateY(-30px) rotate(15deg) scale(1.15)} 100%{left:110vw;transform:translateY(15px) rotate(25deg) scale(.9);opacity:1} }
+  @keyframes pop { 0%{transform:scale(.2);opacity:1} 100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0} }
+  
+  /* Accessibility support for users preferring reduced motion */
+  @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+</style>
+</head>
+<body>
+<main class="shell">
+  <!-- Home Section: Landing Page with Form -->
+  <section id="home">
+    <header>
+      <div class="ieee-mark" aria-label="IEEE">IEEE</div>
+      <h1>Welcome to IEEE AAST Cairo family</h1>
+      <p class="subtitle">New season. New spirit. New goals.</p>
+    </header>
+    <div class="panel">
+      <form id="welcomeForm">
+        <label for="memberName">May you please enter your name?</label>
+        <input id="memberName" name="memberName" type="text" placeholder="Enter your name" autocomplete="name" maxlength="60" required>
+        <fieldset>
+          <legend>Choose your society <span style="font-weight:400;color:#cceeff">(choose one)</span></legend>
+          <div class="choices">
+            <div class="choice"><input type="radio" id="cs" name="society" value="CS" required><label for="cs"><span class="emoji">🖥️</span>CS</label></div>
+            <div class="choice"><input type="radio" id="ras" name="society" value="RAS"><label for="ras"><span class="emoji">🤖</span>RAS</label></div>
+            <div class="choice"><input type="radio" id="pes" name="society" value="PES"><label for="pes"><span class="emoji">🌞🌱🔌</span>PES</label></div>
+            <div class="choice"><input type="radio" id="ies" name="society" value="IES"><label for="ies"><span class="emoji">⚡</span>IES</label></div>
+            <div class="choice"><input type="radio" id="events" name="society" value="Events"><label for="events"><span class="emoji">👥</span>Events</label></div>
+            <div class="choice"><input type="radio" id="hr" name="society" value="HR"><label for="hr"><span class="emoji">💼</span>HR</label></div>
+            <div class="choice"><input type="radio" id="branding" name="society" value="Branding"><label for="branding"><span class="emoji">💡</span>Branding</label></div>
+          </div>
+        </fieldset>
+        <div class="actions"><button type="submit">Join the family ✨</button></div>
+        <p class="hint" id="hint" aria-live="polite"></p>
+      </form>
+    </div>
+    <section class="sponsors" aria-label="Branch sponsor logos placeholder">
+      <strong>Branch Sponsors</strong>
+      <div class="sponsor-slots">
+        <div class="logo-slot">Sponsor logo</div><div class="logo-slot">Sponsor logo</div><div class="logo-slot">Sponsor logo</div>
+      </div>
+    </section>
+    <div class="footer">IEEE AAST Cairo Student Branch · One family, many possibilities</div>
+  </section>
+
+  <!-- Society Page Section: Success/Welcome Card View -->
+  <section id="societyPage" class="page" aria-live="polite">
+    <div class="welcome-card">
+      <div class="ieee-mark">IEEE</div>
+      <div class="theme-art" id="themeArt" aria-hidden="true"></div>
+      <h2 id="welcomeTitle">Welcome!</h2>
+      <p id="welcomeText"></p>
+      <button class="back" id="backButton" type="button">← Back to society selection</button>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  // DOM element references
+  const form = document.getElementById('welcomeForm');
+  const nameInput = document.getElementById('memberName');
+  const hint = document.getElementById('hint');
+  const home = document.getElementById('home');
+  const page = document.getElementById('societyPage');
+  const title = document.getElementById('welcomeTitle');
+  const welcomeText = document.getElementById('welcomeText');
+  const art = document.getElementById('themeArt');
+  const backButton = document.getElementById('backButton');
+  let previousTheme = '';
+
+  // Dictionary mapping each society to its theme configuration, emoji, and description line
+  const societies = {
+    CS: { emoji:'🖥️', theme:'cs', line:'Build, code, create—and turn bold ideas into reality.' },
+    RAS: { emoji:'🤖', theme:'ras', line:'Explore robotics, intelligent machines, and the future of automation.' },
+    PES: { emoji:'🌞🌱🔌', theme:'pes', line:'Power a brighter future through energy, sustainability, and innovation.' },
+    IES: { emoji:'⚡', theme:'ies', line:'Connect ideas, circuits, and people to engineer what comes next.' },
+    Events: { emoji:'👥🎉', theme:'events', line:'Create unforgettable experiences and bring our community together.' },
+    HR: { emoji:'💼', theme:'hr', line:'Support our people, grow our talent, and make every member feel at home.' },
+    Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
+  };
+
+  // Function to trigger a flying emoji animation across the screen
+  function flyEmoji(emoji) {
+    const flyer = document.createElement('span');
+    flyer.className = 'flyer';
+    flyer.textContent = emoji;
+    flyer.style.setProperty('--top', (20 + Math.random() * 60) + 'vh');
+    document.body.appendChild(flyer);
+    flyer.addEventListener('animationend', () => flyer.remove(), { once:true });
+  }
+
+  // Function to create a particle burst effect when typing a name
+  function burst() {
+    for (let i = 0; i < 16; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'sparkle';
+      dot.style.left = (45 + Math.random() * 10) + 'vw';
+      dot.style.top = (40 + Math.random() * 20) + 'vh';
+      dot.style.setProperty('--dx', ((Math.random() - .5) * 260) + 'px');
+      dot.style.setProperty('--dy', ((Math.random() - .5) * 220) + 'px');
+      document.body.appendChild(dot);
+      dot.addEventListener('animationend', () => dot.remove(), { once:true });
+    }
+  }
+
+  // Event listener when user finishes entering their name
+  nameInput.addEventListener('change', () => {
+    if (nameInput.value.trim()) { flyEmoji('🎊'); burst(); }
+  });
+  
+  nameInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      // Let the form's native validation and submit flow handle Enter.
+    }
+  });
+
+  // Handle form submission and transition to the customized society page
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const memberName = nameInput.value.trim();
+    const selected = form.querySelector('input[name="society"]:checked');
+    
+    // Validate inputs
+    if (!memberName) { hint.textContent = 'Please enter your name to continue.'; nameInput.focus(); return; }
+    if (!selected) { hint.textContent = 'Please choose one society to continue.'; return; }
+    
+    const society = selected.value;
+    const data = societies[society];
+    previousTheme = data.theme;
+    
+    // Trigger visual effects and populate content dynamically
+    flyEmoji(data.emoji);
+    hint.textContent = '';
+    title.textContent = `Welcome to ${society}, ${memberName}!`;
+    welcomeText.textContent = data.line;
+    art.textContent = data.emoji;
+    
+    // Switch views and update body background theme
+    home.style.display = 'none';
+    page.classList.add('active');
+    document.body.className = `theme-${data.theme}`;
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+
+  // Handle returning back to the home/selection screen
+  backButton.addEventListener('click', () => {
+    page.classList.remove('active');
+    home.style.display = '';
+    document.body.className = '';
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+})();
+</script>
+</body>
+</html>
+```[cite: 1]
