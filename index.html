@@ -219,6 +219,321 @@
   .welcome-card p { color:#c8edff; font-size:1.1rem; margin-bottom: 20px; }
   .theme-art { font-size:clamp(3rem,8vw,5rem); margin:10px 0; filter:drop-shadow(0 0 18px #7adfff55); }
 
+  /* CS Python Beginner Mini-Game Styling */
+  .code-breaker-box {
+    margin: 25px 0;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(2, 13, 28, 0.7);
+    border: 1px solid rgba(84, 200, 245, 0.4);
+    text-align: left;
+  }
+  .code-breaker-box h3 {
+    margin: 0 0 8px;
+    color: #8edcff;
+    font-size: 1.15rem;
+    text-align: center;
+  }
+  .python-code-display {
+    background: #010a15;
+    border: 1px solid rgba(84, 200, 245, 0.4);
+    padding: 14px;
+    border-radius: 10px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: #54c8f5;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    margin: 14px 0;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+  }
+  .game-input-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .game-input-group input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #54c8f5;
+    background: #fff;
+    color: #032B50;
+    font-weight: bold;
+    outline: none;
+  }
+  .game-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #00629B;
+    color: #fff;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .game-btn:hover { background: #54c8f5; color: #020d1c; }
+  .game-feedback {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    min-height: 20px;
+  }
+
+  /* RAS Robot Maze Game Styling */
+  .maze-game-box {
+    margin: 25px 0;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(2, 13, 28, 0.8);
+    border: 1px solid rgba(84, 200, 245, 0.5);
+    text-align: center;
+  }
+  .maze-game-box h3 {
+    margin: 0 0 8px;
+    color: #8edcff;
+    font-size: 1.15rem;
+  }
+  .maze-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 42px);
+    grid-template-rows: repeat(6, 42px);
+    gap: 4px;
+    justify-content: center;
+    margin: 15px auto;
+    background: #010a15;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(84, 200, 245, 0.3);
+    width: max-content;
+  }
+  .maze-cell {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    font-size: 1.4rem;
+  }
+  .maze-cell.wall {
+    background: #003a5c;
+    border: 1px solid #54c8f555;
+  }
+  .maze-cell.path {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .maze-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .maze-btn-row {
+    display: flex;
+    gap: 8px;
+  }
+  .dir-btn {
+    width: 46px;
+    height: 40px;
+    border-radius: 8px;
+    background: #00629B;
+    color: #fff;
+    border: 1px solid #54c8f5;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .dir-btn:hover { background: #54c8f5; color: #020d1c; transform: scale(1.05); }
+  .maze-status {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    min-height: 22px;
+  }
+
+  /* PES Interactive Eco-Grid Power Balancer Game Styling */
+  .pes-game-box {
+    margin: 25px 0;
+    padding: 22px;
+    border-radius: 18px;
+    background: rgba(2, 13, 28, 0.85);
+    border: 1px solid rgba(43, 155, 120, 0.6);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .pes-game-box h3 {
+    margin: 0 0 6px;
+    color: #6ee7b7;
+    font-size: 1.2rem;
+  }
+  .pes-dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(1, 10, 21, 0.8);
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(84, 200, 245, 0.3);
+    margin: 12px 0 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pes-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pes-metric-lbl { font-size: 0.78rem; color: #8edcff; text-transform: uppercase; font-weight: bold; }
+  .pes-metric-val { font-size: 1.25rem; font-weight: 900; color: #54c8f5; font-family: monospace; }
+  
+  .power-bar-container {
+    width: 100%;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.2);
+    margin: 12px 0;
+  }
+  .power-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.3s ease, background-color 0.3s;
+  }
+  .target-indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+    z-index: 2;
+  }
+  
+  .sliders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .slider-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: left;
+  }
+  .slider-card label {
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .slider-card input[type="range"] {
+    width: 100%;
+    accent-color: #10b981;
+    cursor: pointer;
+  }
+
+  /* IES Interactive Manual Circuit Schematic Game Styling */
+  .circuit-game-box {
+    margin: 25px 0;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(2, 13, 28, 0.85);
+    border: 1px solid rgba(84, 200, 245, 0.5);
+    text-align: center;
+  }
+  .circuit-game-box h3 {
+    margin: 0 0 6px;
+    color: #8edcff;
+    font-size: 1.15rem;
+  }
+  .circuit-schematic-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 52px);
+    grid-template-rows: repeat(3, 52px);
+    gap: 8px;
+    justify-content: center;
+    margin: 15px auto;
+    background: #010a15;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(84, 200, 245, 0.4);
+    width: max-content;
+  }
+  .schematic-node {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(84, 200, 245, 0.4);
+    border-radius: 10px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .schematic-node:hover {
+    background: rgba(84, 200, 245, 0.15);
+    border-color: #54c8f5;
+  }
+  .circuit-toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .tool-btn {
+    padding: 8px 14px;
+    background: #00629B;
+    border: 1px solid #54c8f5;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.15s;
+  }
+  .tool-btn:hover { background: #54c8f5; color: #020d1c; }
+  .tool-btn.active-tool {
+    background: #54c8f5;
+    color: #020d1c;
+    box-shadow: 0 0 10px #54c8f5;
+  }
+  .circuit-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .action-btn {
+    padding: 9px 20px;
+    background: #00629B;
+    border: 1px solid #54c8f5;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+  }
+  .action-btn:hover { background: #54c8f5; color: #020d1c; }
+  .circuit-status {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    min-height: 22px;
+  }
+
   /* Recent Events Slider Section inside Society Page */
   .events-slider-container {
     margin: 25px 0 20px;
@@ -295,7 +610,7 @@
   /* Keyframe animations */
   @keyframes scrollLeft {
     0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-140px * 12 - 15px * 12)); }
+    100% { transform: translateX(calc(-140px * 13 - 15px * 13)); }
   }
   @keyframes borderGlow {
     0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(0, 98, 155, 0.3); }
@@ -386,7 +701,7 @@
     <div class="footer">IEEE AAST Cairo Student Branch · One family, many possibilities</div>
   </section>
 
-  <!-- Society Page Section: Success/Welcome Card View with 12-Photo Slider -->
+  <!-- Society Page Section: Success/Welcome Card View with 13-Photo Slider -->
   <section id="societyPage" class="page" aria-live="polite">
     <div class="welcome-card">
       <div class="ieee-mark">IEEE</div>
@@ -394,12 +709,132 @@
       <h2 id="welcomeTitle">Welcome!</h2>
       <p id="welcomeText"></p>
 
-      <!-- Recent Events & Memories Slider (13 Sliding Photo Slots) -->
+      <!-- CS Beginner Python Mini Game -->
+      <div id="csGameSection" class="code-breaker-box" style="display:none;">
+        <h3>🐍 Beginner Python Challenge: Try Your First Code!</h3>
+        <p id="gamePrompt" style="font-size: 0.9rem; color: #cceeff; margin-bottom: 8px; text-align: center;"></p>
+        <div class="python-code-display" id="pythonCodeDisplay"></div>
+        <div class="game-input-group">
+          <input type="text" id="gameAnswerInput" placeholder="Type what Python prints out..." autocomplete="off">
+          <button type="button" class="game-btn" id="gameSubmitBtn">Run Code 🚀</button>
+        </div>
+        <div class="game-feedback" id="gameFeedback"></div>
+      </div>
+
+      <!-- RAS Robot Maze Escape Game -->
+      <div id="rasGameSection" class="maze-game-box" style="display:none;">
+        <h3>🤖 RAS Challenge: Guide the Robot to the Finish Line!</h3>
+        <p style="font-size: 0.88rem; color: #cceeff; margin-bottom: 8px;">Use the on-screen buttons or arrow keys to navigate 🤖 to 🏁</p>
+        <div class="maze-grid" id="mazeGrid"></div>
+        <div class="maze-controls">
+          <button type="button" class="dir-btn" id="btnUp">⬆️</button>
+          <div class="maze-btn-row">
+            <button type="button" class="dir-btn" id="btnLeft">⬅️</button>
+            <button type="button" class="dir-btn" id="btnDown">⬇️</button>
+            <button type="button" class="dir-btn" id="btnRight">➡️</button>
+          </div>
+        </div>
+        <div class="maze-status" id="mazeStatus"></div>
+      </div>
+
+      <!-- Advanced PES Smart Grid Balancer Game -->
+      <div id="pesGameSection" class="pes-game-box" style="display:none;">
+        <h3>⚡ PES Smart Microgrid Power Balancer</h3>
+        <p style="font-size: 0.86rem; color: #cceeff; margin-bottom: 8px;">Adjust generator outputs to match the city's fluctuating power demand under live weather conditions!</p>
+        
+        <div class="pes-dashboard">
+          <div class="pes-metric">
+            <span class="pes-metric-lbl">Target Demand</span>
+            <span class="pes-metric-val" id="pesDemandVal">120 MW</span>
+          </div>
+          <div class="pes-metric">
+            <span class="pes-metric-lbl">Live Generation</span>
+            <span class="pes-metric-val" id="pesGenVal">0 MW</span>
+          </div>
+          <div class="pes-metric">
+            <span class="pes-metric-lbl">Current Weather</span>
+            <span class="pes-metric-val" id="pesWeatherVal" style="font-size: 1rem;">☀️ Sunny & Windy</span>
+          </div>
+        </div>
+
+        <div class="power-bar-container">
+          <div class="power-bar-fill" id="pesPowerBar"></div>
+          <div class="target-indicator" id="pesTargetLine" style="left: 60%;"></div>
+        </div>
+
+        <div class="sliders-grid">
+          <div class="slider-card">
+            <label>☀️ Solar Farm <span id="solarValDisplay">0 MW</span></label>
+            <input type="range" id="solarSlider" min="0" max="60" value="0">
+          </div>
+          <div class="slider-card">
+            <label>💨 Wind Farm <span id="windValDisplay">0 MW</span></label>
+            <input type="range" id="windSlider" min="0" max="60" value="0">
+          </div>
+          <div class="slider-card">
+            <label>💧 Hydro Dam <span id="hydroValDisplay">0 MW</span></label>
+            <input type="range" id="hydroSlider" min="0" max="60" value="0">
+          </div>
+          <div class="slider-card">
+            <label>🔋 Battery Storage <span id="batteryValDisplay">0 MW</span></label>
+            <input type="range" id="batterySlider" min="0" max="40" value="0">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:12px; margin-top:10px;">
+          <button type="button" class="action-btn" id="pesNewShiftBtn">🌤️ Change Weather & Shift</button>
+        </div>
+        <div class="circuit-status" id="pesStatus" style="margin-top:10px;">Adjust sliders to match target!</div>
+      </div>
+
+      <!-- IES Interactive Manual Circuit Schematic Game -->
+      <div id="iesGameSection" class="circuit-game-box" style="display:none;">
+        <h3>⚡ IES Challenge: Build the Circuit Schematic!</h3>
+        <p style="font-size: 0.84rem; color: #cceeff; margin-bottom: 6px;">Place components correctly to complete the loop: <strong>1 Battery 🔋, 1 Resistor ⚡, 1 Transistor 🎛️, 1 Bulb 💡, 4 Horizontal Wires ──, 2 Vertical Wires │</strong></p>
+        
+        <!-- Toolbar for selecting components -->
+        <div class="circuit-toolbar">
+          <button type="button" class="tool-btn active-tool" data-tool="🔋">🔋 Battery</button>
+          <button type="button" class="tool-btn" data-tool="⚡">⚡ Resistor</button>
+          <button type="button" class="tool-btn" data-tool="🎛️">🎛️ Transistor</button>
+          <button type="button" class="tool-btn" data-tool="💡">💡 Bulb</button>
+          <button type="button" class="tool-btn" data-tool="──">── Wire (H)</button>
+          <button type="button" class="tool-btn" data-tool="│">│ Wire (V)</button>
+          <button type="button" class="tool-btn" data-tool="🗑️" style="background:#421111;">🗑️ Clear</button>
+        </div>
+
+        <!-- 2D Circuit Schematic Grid -->
+        <div class="circuit-schematic-grid" id="schematicGrid">
+          <div class="schematic-node" data-idx="0"></div>
+          <div class="schematic-node" data-idx="1"></div>
+          <div class="schematic-node" data-idx="2"></div>
+          <div class="schematic-node" data-idx="3"></div>
+          <div class="schematic-node" data-idx="4"></div>
+          <div class="schematic-node" data-idx="5"></div>
+          <div class="schematic-node" style="border:none; background:transparent; cursor:default;"></div>
+          <div class="schematic-node" style="border:none; background:transparent; cursor:default;"></div>
+          <div class="schematic-node" style="border:none; background:transparent; cursor:default;"></div>
+          <div class="schematic-node" data-idx="6"></div>
+          <div class="schematic-node" data-idx="7"></div>
+          <div class="schematic-node" data-idx="8"></div>
+          <div class="schematic-node" data-idx="9"></div>
+          <div class="schematic-node" style="border:none; background:transparent; cursor:default;"></div>
+          <div class="schematic-node" style="border:none; background:transparent; cursor:default;"></div>
+        </div>
+
+        <div class="circuit-actions">
+          <button type="button" class="action-btn" id="checkCircuitBtn">Check Circuit 🔍</button>
+          <button type="button" class="action-btn" id="resetCircuitBtn" style="background:#032B50; border-color:#8edcff;">🔄 Reset</button>
+        </div>
+        <div class="circuit-status" id="circuitStatus"></div>
+      </div>
+
+      <!-- Recent Events & Memories Slider -->
       <div class="events-slider-container">
         <h3>Recent Events & Memories (Elsewedy, Engineering Gateway & REEPE)</h3>
         <div class="slider-wrapper">
           <div class="slider-track" id="sliderTrack">
-            <!-- Set 1 (13 slots with placeholders for file names) -->
+            <!-- Set 1 (13 slots) -->
             <div class="event-slide-card"><img src="event1.jpeg" alt="Event 1"></div>
             <div class="event-slide-card"><img src="event2.jpeg" alt="Event 2"></div>
             <div class="event-slide-card"><img src="event3.jpeg" alt="Event 3"></div>
@@ -412,7 +847,7 @@
             <div class="event-slide-card"><img src="event10.jpeg" alt="Event 10"></div>
             <div class="event-slide-card"><img src="event11.jpeg" alt="Event 11"></div>
             <div class="event-slide-card"><img src="event12.jpeg" alt="Event 12"></div>
-             <div class="event-slide-card"><img src="event13.jpeg" alt="Event 13"></div>
+            <div class="event-slide-card"><img src="event13.jpeg" alt="Event 13"></div>
             
             <!-- Duplicate Set for infinite seamless looping animation -->
             <div class="event-slide-card"><img src="event1.jpeg" alt="Event 1"></div>
@@ -427,7 +862,7 @@
             <div class="event-slide-card"><img src="event10.jpeg" alt="Event 10"></div>
             <div class="event-slide-card"><img src="event11.jpeg" alt="Event 11"></div>
             <div class="event-slide-card"><img src="event12.jpeg" alt="Event 12"></div>
-               <div class="event-slide-card"><img src="event13.jpeg" alt="Event 13"></div>
+            <div class="event-slide-card"><img src="event13.jpeg" alt="Event 13"></div>
           </div>
         </div>
       </div>
@@ -452,7 +887,305 @@
   const welcomeSound = document.getElementById('welcomeSound');
   const visitCountEl = document.getElementById('visitCount');
   const submissionCountEl = document.getElementById('submissionCount');
-  let previousTheme = '';
+  
+  // CS Game Elements
+  const csGameSection = document.getElementById('csGameSection');
+  const gamePrompt = document.getElementById('gamePrompt');
+  const pythonCodeDisplay = document.getElementById('pythonCodeDisplay');
+  const gameAnswerInput = document.getElementById('gameAnswerInput');
+  const gameSubmitBtn = document.getElementById('gameSubmitBtn');
+  const gameFeedback = document.getElementById('gameFeedback');
+
+  // RAS Maze Game Elements
+  const rasGameSection = document.getElementById('rasGameSection');
+  const mazeGrid = document.getElementById('mazeGrid');
+  const mazeStatus = document.getElementById('mazeStatus');
+  const btnUp = document.getElementById('btnUp');
+  const btnDown = document.getElementById('btnDown');
+  const btnLeft = document.getElementById('btnLeft');
+  const btnRight = document.getElementById('btnRight');
+
+  // Advanced PES Microgrid Game Elements
+  const pesGameSection = document.getElementById('pesGameSection');
+  const pesDemandVal = document.getElementById('pesDemandVal');
+  const pesGenVal = document.getElementById('pesGenVal');
+  const pesWeatherVal = document.getElementById('pesWeatherVal');
+  const pesPowerBar = document.getElementById('pesPowerBar');
+  const pesTargetLine = document.getElementById('pesTargetLine');
+  const pesStatus = document.getElementById('pesStatus');
+  const pesNewShiftBtn = document.getElementById('pesNewShiftBtn');
+
+  const solarSlider = document.getElementById('solarSlider');
+  const windSlider = document.getElementById('windSlider');
+  const hydroSlider = document.getElementById('hydroSlider');
+  const batterySlider = document.getElementById('batterySlider');
+
+  const solarValDisplay = document.getElementById('solarValDisplay');
+  const windValDisplay = document.getElementById('windValDisplay');
+  const hydroValDisplay = document.getElementById('hydroValDisplay');
+  const batteryValDisplay = document.getElementById('batteryValDisplay');
+
+  let currentTargetDemand = 120;
+  let weatherMultipliers = { solar: 1.0, wind: 1.0, hydro: 1.0, name: "☀️ Sunny & Clear" };
+
+  const weatherScenarios = [
+    { name: "☀️ Bright Sun & Moderate Wind", solar: 1.0, wind: 0.8, hydro: 1.0 },
+    { name: "☁️ Heavy Overcast & Strong Wind", solar: 0.3, wind: 1.2, hydro: 1.0 },
+    { name: "🌧️ Rainy Storm & Torrential Hydro", solar: 0.2, wind: 1.1, hydro: 1.3 },
+    { name: "🌙 Night Peak Demand (No Solar)", solar: 0.0, wind: 1.0, hydro: 1.0 }
+  ];
+
+  function initPesGame() {
+    // Pick random target demand between 70 MW and 150 MW
+    currentTargetDemand = Math.floor(Math.random() * 80) + 70;
+    const scenario = weatherScenarios[Math.floor(Math.random() * weatherScenarios.length)];
+    weatherMultipliers = scenario;
+
+    pesDemandVal.textContent = `${currentTargetDemand} MW`;
+    pesWeatherVal.textContent = scenario.name;
+
+    // Reset sliders
+    solarSlider.value = 0;
+    windSlider.value = 0;
+    hydroSlider.value = 0;
+    batterySlider.value = 0;
+
+    // Position target line on bar (max capacity = 200 MW)
+    const targetPercent = (currentTargetDemand / 200) * 100;
+    pesTargetLine.style.left = `${targetPercent}%`;
+
+    updatePesGrid();
+  }
+
+  function updatePesGrid() {
+    const solarPwr = Math.round(solarSlider.value * weatherMultipliers.solar);
+    const windPwr = Math.round(windSlider.value * weatherMultipliers.wind);
+    const hydroPwr = Math.round(hydroSlider.value * weatherMultipliers.hydro);
+    const batteryPwr = parseInt(batterySlider.value, 10);
+
+    solarValDisplay.textContent = `${solarPwr} MW`;
+    windValDisplay.textContent = `${windPwr} MW`;
+    hydroValDisplay.textContent = `${hydroPwr} MW`;
+    batteryValDisplay.textContent = `${batteryPwr} MW`;
+
+    const totalGen = solarPwr + windPwr + hydroPwr + batteryPwr;
+    pesGenVal.textContent = `${totalGen} MW`;
+
+    const barPercent = Math.min(100, (totalGen / 200) * 100);
+    pesPowerBar.style.width = `${barPercent}%`;
+
+    const diff = totalGen - currentTargetDemand;
+    if (Math.abs(diff) <= 5) {
+      pesStatus.style.color = '#6ee7b7';
+      pesStatus.textContent = '⚡ Perfect Balance! Eco-City Microgrid is 100% Stable!';
+      pesPowerBar.style.background = '#10b981';
+      for(let i=0; i<3; i++) flyEmoji('🌱');
+    } else if (diff < -5) {
+      pesStatus.style.color = '#ff7676';
+      pesStatus.textContent = `⚠️ Blackout Risk! Need ${Math.abs(diff)} MW more clean energy!`;
+      pesPowerBar.style.background = '#ef4444';
+    } else {
+      pesStatus.style.color = '#f59e0b';
+      pesStatus.textContent = `⚠️ Grid Overload! Excess generation (+${diff} MW). Scale back!`;
+      pesPowerBar.style.background = '#f59e0b';
+    }
+  }
+
+  [solarSlider, windSlider, hydroSlider, batterySlider].forEach(slider => {
+    slider.addEventListener('input', updatePesGrid);
+  });
+
+  pesNewShiftBtn.addEventListener('click', initPesGame);
+
+  // IES Manual Schematic Game Elements
+  const iesGameSection = document.getElementById('iesGameSection');
+  const schematicNodes = document.querySelectorAll('.schematic-node[data-idx]');
+  const toolBtns = document.querySelectorAll('.tool-btn[data-tool]');
+  const checkCircuitBtn = document.getElementById('checkCircuitBtn');
+  const resetCircuitBtn = document.getElementById('resetCircuitBtn');
+  const circuitStatus = document.getElementById('circuitStatus');
+
+  let selectedTool = '🔋';
+
+  toolBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      toolBtns.forEach(b => b.classList.remove('active-tool'));
+      btn.classList.add('active-tool');
+      selectedTool = btn.getAttribute('data-tool');
+    });
+  });
+
+  schematicNodes.forEach(node => {
+    node.addEventListener('click', () => {
+      node.textContent = (selectedTool === '🗑️') ? '' : selectedTool;
+      circuitStatus.textContent = '';
+    });
+  });
+
+  checkCircuitBtn.addEventListener('click', () => {
+    let counts = { '🔋': 0, '⚡': 0, '🎛️': 0, '💡': 0, '──': 0, '│': 0 };
+    schematicNodes.forEach(node => {
+      const val = node.textContent.trim();
+      if (counts[val] !== undefined) {
+        counts[val]++;
+      }
+    });
+
+    const isValid = counts['🔋'] === 1 &&
+                    counts['⚡'] === 1 &&
+                    counts['🎛️'] === 1 &&
+                    counts['💡'] === 1 &&
+                    counts['──'] === 4 &&
+                    counts['│'] === 2;
+
+    if (isValid) {
+      circuitStatus.style.color = '#54c8f5';
+      circuitStatus.textContent = '⚡ Correct! Circuit schematic wired successfully & energized!';
+      schematicNodes.forEach(node => {
+        node.style.background = 'rgba(84, 200, 245, 0.3)';
+        node.style.borderColor = '#54c8f5';
+      });
+      for(let i=0; i<10; i++) flyEmoji('⚡');
+    } else {
+      circuitStatus.style.color = '#ff7676';
+      circuitStatus.textContent = '❌ Incomplete layout! Make sure you place: 1 Battery, 1 Resistor, 1 Transistor, 1 Bulb, 4 Horizontal Wires (──), and 2 Vertical Wires (│).';
+    }
+  });
+
+  resetCircuitBtn.addEventListener('click', () => {
+    schematicNodes.forEach(node => {
+      node.textContent = '';
+      node.style.background = 'rgba(255, 255, 255, 0.05)';
+      node.style.borderColor = 'rgba(84, 200, 245, 0.4)';
+    });
+    circuitStatus.textContent = '';
+  });
+
+  // Maze layout (0: path, 1: wall, 2: robot start, 3: finish flag)
+  const initialMaze = [
+    [2, 0, 1, 0, 0, 0],
+    [1, 0, 1, 0, 1, 0],
+    [0, 0, 0, 0, 1, 0],
+    [0, 1, 1, 0, 0, 0],
+    [0, 0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 3, 0]
+  ];
+  let mazeData = [];
+  let robotPos = { r: 0, c: 0 };
+  let isMazeWon = false;
+
+  function initMaze() {
+    mazeData = initialMaze.map(row => [...row]);
+    robotPos = { r: 0, c: 0 };
+    isMazeWon = false;
+    mazeStatus.textContent = '';
+    renderMaze();
+  }
+
+  function renderMaze() {
+    mazeGrid.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+    for (let r = 0; r < mazeData.length; r++) {
+      for (let c = 0; c < mazeData[r].length; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'maze-cell';
+        if (robotPos.r === r && robotPos.c === c) {
+          cell.textContent = '🤖';
+        } else if (mazeData[r][c] === 1) {
+          cell.className += ' wall';
+          cell.textContent = '⬛';
+        } else if (mazeData[r][c] === 3) {
+          cell.textContent = '🏁';
+        } else {
+          cell.className += ' path';
+          cell.textContent = '';
+        }
+        fragment.appendChild(cell);
+      }
+    }
+    mazeGrid.appendChild(fragment);
+  }
+
+  function moveRobot(dr, dc) {
+    if (isMazeWon) return;
+    const newR = robotPos.r + dr;
+    const newC = robotPos.c + dc;
+
+    if (newR >= 0 && newR < 6 && newC >= 0 && newC < 6) {
+      if (mazeData[newR][newC] !== 1) {
+        robotPos.r = newR;
+        robotPos.c = newC;
+        renderMaze();
+
+        if (mazeData[newR][newC] === 3) {
+          isMazeWon = true;
+          mazeStatus.style.color = '#54c8f5';
+          mazeStatus.textContent = '🎉 Mission Accomplished! Robot Escaped the Maze!';
+          for(let i=0; i<12; i++) flyEmoji('🤖');
+        }
+      }
+    }
+  }
+
+  btnUp.onclick = () => moveRobot(-1, 0);
+  btnDown.onclick = () => moveRobot(1, 0);
+  btnLeft.onclick = () => moveRobot(0, -1);
+  btnRight.onclick = () => moveRobot(0, 1);
+
+  window.addEventListener('keydown', (e) => {
+    if (rasGameSection.style.display !== 'none') {
+      if (['ArrowUp', 'KeyW'].includes(e.code)) { e.preventDefault(); moveRobot(-1, 0); }
+      if (['ArrowDown', 'KeyS'].includes(e.code)) { e.preventDefault(); moveRobot(1, 0); }
+      if (['ArrowLeft', 'KeyA'].includes(e.code)) { e.preventDefault(); moveRobot(0, -1); }
+      if (['ArrowRight', 'KeyD'].includes(e.code)) { e.preventDefault(); moveRobot(0, 1); }
+    }
+  });
+
+  // Beginner-friendly Python Puzzles for CS
+  const pythonPuzzles = [
+    { 
+      prompt: "Question 1: What will Python print out when we run this text?", 
+      code: "branch = 'IEEE AAST Cairo'\nprint(branch)", 
+      answer: "IEEE AAST Cairo" 
+    },
+    { 
+      prompt: "Question 2: What number does this simple math code print?", 
+      code: "members = 10\nnew_members = 15\ntotal = members + new_members\nprint(total)", 
+      answer: "25" 
+    },
+    { 
+      prompt: "Question 3: What word does this greeting code output?", 
+      code: "welcome = 'Hello'\nteam = 'CS Family'\nprint(welcome + ' ' + team)", 
+      answer: "Hello CS Family" 
+    }
+  ];
+  let currentPuzzleIndex = 0;
+
+  function loadPuzzle() {
+    const puzzle = pythonPuzzles[currentPuzzleIndex];
+    gamePrompt.textContent = puzzle.prompt;
+    pythonCodeDisplay.textContent = puzzle.code;
+    gameAnswerInput.value = '';
+    gameFeedback.textContent = '';
+    gameFeedback.style.color = '#fff';
+  }
+
+  gameSubmitBtn.onclick = () => {
+    const userVal = gameAnswerInput.value.trim();
+    const correctVal = pythonPuzzles[currentPuzzleIndex].answer;
+    
+    if (userVal.toLowerCase() === correctVal.toLowerCase()) {
+      gameFeedback.style.color = '#54c8f5';
+      gameFeedback.textContent = '🎉 Awesome! You got the correct output!';
+      setTimeout(() => {
+        currentPuzzleIndex = (currentPuzzleIndex + 1) % pythonPuzzles.length;
+        loadPuzzle();
+      }, 2000);
+    } else {
+      gameFeedback.style.color = '#ff7676';
+      gameFeedback.textContent = `❌ Not quite! Expected "${correctVal}"`;
+    }
+  };
 
   // Dictionary mapping each society to its theme configuration, emoji, and description line
   const societies = {
@@ -465,7 +1198,6 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
-  // Function to load and increment global visit count
   async function initMetrics() {
     let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
@@ -527,8 +1259,25 @@
     
     const society = selected.value;
     const data = societies[society];
-    previousTheme = data.theme;
     
+    // Show or hide specific games based on selected society
+    csGameSection.style.display = (society === 'CS') ? 'block' : 'none';
+    rasGameSection.style.display = (society === 'RAS') ? 'block' : 'none';
+    pesGameSection.style.display = (society === 'PES') ? 'block' : 'none';
+    iesGameSection.style.display = (society === 'IES') ? 'block' : 'none';
+
+    if (society === 'CS') loadPuzzle();
+    if (society === 'RAS') initMaze();
+    if (society === 'PES') initPesGame();
+    if (society === 'IES') {
+      schematicNodes.forEach(node => {
+        node.textContent = '';
+        node.style.background = 'rgba(255, 255, 255, 0.05)';
+        node.style.borderColor = 'rgba(84, 200, 245, 0.4)';
+      });
+      circuitStatus.textContent = '';
+    }
+
     let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10) + 1;
     localStorage.setItem('ieee_submissions_total', totalSubmissions);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
