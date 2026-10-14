@@ -44,9 +44,29 @@
   /* Circular IEEE logo badge */
   .ieee-mark { display:inline-flex; align-items:center; justify-content:center; border:2px solid #8edcff; border-radius:50%; width:54px; height:54px; font-weight:900; color:#8edcff; letter-spacing:-2px; }
   
-  /* Translucent glassmorphism panel for the form */
-  .panel { background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.22); border-radius:24px;
-    padding:clamp(22px,4vw,38px); backdrop-filter:blur(12px); box-shadow:0 20px 60px #00101f66; }
+  /* Translucent glassmorphism panel with light blue and white glowing border animation */
+  .panel { 
+    background:rgba(255,255,255,.09); 
+    border-radius:24px;
+    padding:clamp(22px,4vw,38px); 
+    backdrop-filter:blur(12px); 
+    box-shadow:0 20px 60px #00101f66;
+    position: relative;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  
+  /* Shimmering light blue and white border effect for the panel */
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, #54c8f5, #ffffff, #00629B, #54c8f5);
+    background-size: 300% 300%;
+    z-index: -1;
+    animation: borderGlow 4s ease infinite;
+  }
   
   label, legend { display:block; font-weight:700; margin-bottom:12px; font-size:1.05rem; }
   
@@ -80,8 +100,31 @@
   
   .hint { text-align:center; color:#d4efff; min-height:22px; margin:12px 0 0; }
   
-  /* Sponsors placeholder section */
-  .sponsors { margin-top:24px; padding:18px; border:1px dashed #b7eaff88; border-radius:18px; text-align:center; color:#cceeff; }
+  /* Sponsors placeholder section with matching glowing light border */
+  .sponsors { 
+    margin-top:24px; 
+    padding:18px; 
+    border-radius:18px; 
+    text-align:center; 
+    color:#cceeff; 
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .sponsors::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #54c8f5, #ffffff, #00629B, #54c8f5);
+    background-size: 300% 300%;
+    z-index: -1;
+    animation: borderGlow 4s ease infinite;
+  }
+
   .sponsors strong { display:block; margin-bottom:8px; }
   .sponsor-slots { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }
   .logo-slot { width:120px; height:100px; display:grid; place-items:center; border:1px solid #ffffff44; border-radius:12px; color:#cceeff99; font-size:.8rem; background:#ffffff0d; overflow:hidden; padding:4px; }
@@ -90,7 +133,7 @@
   /* Welcome card response page view */
   .page { display:none; text-align:center; min-height:68vh; align-items:center; justify-content:center; }
   .page.active { display:flex; animation:fadeUp .7s ease both; }
-  .welcome-card { width:100%; padding:clamp(28px,6vw,60px) 20px; border-radius:26px; border:1px solid #ffffff30; background:#061a2fc9; box-shadow:0 20px 70px #0005; }
+  .welcome-card { width:100%; padding:clamp(28px,6vw,60px) 20px; border-radius:26px; background:#061a2fc9; box-shadow:0 20px 70px #0005; position:relative; }
   .welcome-card h2 { font-size:clamp(2rem,6vw,4rem); margin:0 0 14px; }
   .welcome-card p { color:#c8edff; font-size:1.15rem; }
   .theme-art { font-size:clamp(3rem,9vw,6rem); margin:20px 0; filter:drop-shadow(0 0 18px #7adfff55); }
@@ -112,7 +155,12 @@
   body.theme-hr { background:radial-gradient(circle at 80% 15%,#477bd2,transparent 35%),linear-gradient(135deg,#101d3d,#164f72); }
   body.theme-branding { background:radial-gradient(circle at 80% 15%,#bc7a37,transparent 35%),linear-gradient(135deg,#211638,#075078); }
   
-  /* Keyframe animations for page elements */
+  /* Keyframe animations for light-blue and white glowing border */
+  @keyframes borderGlow {
+    0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2); }
+    50% { background-position: 100% 50%; box-shadow: 0 0 30px rgba(255, 255, 255, 0.7), inset 0 0 20px rgba(84, 200, 245, 0.5); }
+    100% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2); }
+  }
   @keyframes fadeDown { from{opacity:0;transform:translateY(-22px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeUp { from{opacity:0;transform:translateY(20px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
   @keyframes flyAcross { 0%{left:-10vw;transform:translateY(20px) rotate(-15deg) scale(.75);opacity:0}
