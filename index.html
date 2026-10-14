@@ -172,6 +172,9 @@
 </style>
 </head>
 <body>
+<!-- Audio element for custom audio.mp3 sound effect -->
+<audio id="welcomeSound" src="audio.mp3" preload="auto"></audio>
+
 <main class="shell">
   <!-- Home Section: Landing Page with Form -->
   <section id="home">
@@ -238,6 +241,7 @@
   const welcomeText = document.getElementById('welcomeText');
   const art = document.getElementById('themeArt');
   const backButton = document.getElementById('backButton');
+  const welcomeSound = document.getElementById('welcomeSound');
   let previousTheme = '';
 
   // Dictionary mapping each society to its theme configuration, emoji, and description line
@@ -300,6 +304,14 @@
     const data = societies[society];
     previousTheme = data.theme;
     
+    // Play custom audio file
+    if (welcomeSound) {
+      welcomeSound.currentTime = 0;
+      welcomeSound.play().catch(e => {
+        // Browser autoplay policies might require user interaction first (handled by form click)
+      });
+    }
+
     // Trigger visual effects and populate content dynamically
     flyEmoji(data.emoji);
     hint.textContent = '';
