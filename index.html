@@ -134,7 +134,7 @@
     text-shadow: 0 0 12px rgba(84, 200, 245, 0.6);
   }
 
-  /* Social Media Links Section styling */
+  /* Social Media Links Section */
   .social-section {
     margin-top: 24px;
     padding: 18px;
@@ -181,7 +181,7 @@
     font-size: 1.1rem;
   }
 
-  /* Sponsors placeholder section with matching light/dark blue glowing border */
+  /* Sponsors placeholder section */
   .sponsors { 
     margin-top:24px; 
     padding:18px; 
@@ -214,12 +214,68 @@
   /* Welcome card response page view */
   .page { display:none; text-align:center; min-height:68vh; align-items:center; justify-content:center; }
   .page.active { display:flex; animation:fadeUp .7s ease both; }
-  .welcome-card { width:100%; padding:clamp(28px,6vw,60px) 20px; border-radius:26px; background:#061a2fc9; box-shadow:0 20px 70px #0005; position:relative; }
-  .welcome-card h2 { font-size:clamp(2rem,6vw,4rem); margin:0 0 14px; }
-  .welcome-card p { color:#c8edff; font-size:1.15rem; }
-  .theme-art { font-size:clamp(3rem,9vw,6rem); margin:20px 0; filter:drop-shadow(0 0 18px #7adfff55); }
-  
-  .back { margin-top:22px; background:transparent; color:#fff; border:1px solid #ffffff77; box-shadow:none; }
+  .welcome-card { width:100%; max-width: 900px; padding:clamp(28px,6vw,50px) 20px; border-radius:26px; background:#061a2fc9; box-shadow:0 20px 70px #0005; position:relative; }
+  .welcome-card h2 { font-size:clamp(2rem,5vw,3.5rem); margin:0 0 10px; }
+  .welcome-card p { color:#c8edff; font-size:1.1rem; margin-bottom: 20px; }
+  .theme-art { font-size:clamp(3rem,8vw,5rem); margin:10px 0; filter:drop-shadow(0 0 18px #7adfff55); }
+
+  /* Recent Events Slider Section inside Society Page */
+  .events-slider-container {
+    margin: 25px 0 20px;
+    text-align: left;
+  }
+  .events-slider-container h3 {
+    font-size: 1.1rem;
+    color: #8edcff;
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+  .slider-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    padding: 10px 0;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  .slider-track {
+    display: flex;
+    gap: 15px;
+    width: max-content;
+    animation: scrollLeft 35s linear infinite;
+  }
+  .slider-track:hover {
+    animation-play-state: paused;
+  }
+  .event-slide-card {
+    width: 140px;
+    height: 95px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    padding: 4px;
+    font-size: 0.75rem;
+    color: #cceeff99;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .event-slide-card:hover {
+    transform: scale(1.05);
+    border-color: #54c8f5;
+  }
+  .event-slide-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .back { margin-top:15px; background:transparent; color:#fff; border:1px solid #ffffff77; box-shadow:none; }
   .footer { text-align:center; color:#b8dff4a8; font-size:.82rem; margin-top:22px; }
   
   /* Dynamic flying emoji and sparkle animation elements */
@@ -236,7 +292,11 @@
   body.theme-hr { background:radial-gradient(circle at 80% 15%,#477bd2,transparent 35%),linear-gradient(135deg,#101d3d,#164f72); }
   body.theme-branding { background:radial-gradient(circle at 80% 15%,#bc7a37,transparent 35%),linear-gradient(135deg,#211638,#075078); }
   
-  /* Keyframe animations for light-blue and dark-blue glowing border */
+  /* Keyframe animations */
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-140px * 12 - 15px * 12)); }
+  }
   @keyframes borderGlow {
     0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(0, 98, 155, 0.3); }
     50% { background-position: 100% 50%; box-shadow: 0 0 25px rgba(0, 98, 155, 0.7), inset 0 0 15px rgba(84, 200, 245, 0.5); }
@@ -285,7 +345,7 @@
       </form>
     </div>
 
-    <!-- Cover Page Metrics Dashboard showing total entries and visitors -->
+    <!-- Cover Page Metrics Dashboard -->
     <div class="metrics-dashboard" aria-label="Website Activity Dashboard">
       <div class="metric-item">
         <span class="metric-label">🌐 Total Website Visits</span>
@@ -319,22 +379,58 @@
     <section class="sponsors" aria-label="Branch sponsor logos">
       <strong>Branch Sponsors</strong>
       <div class="sponsor-slots">
-        <!-- First sponsor logo added here -->
-        <div class="logo-slot"><img src="image_166237.png" alt="S' Society Sponsor Logo"></div>
-        <!-- Second sponsor logo added here -->
+        <div class="logo-slot"><img src="image_166237.png" alt="Sponsor 1"></div>
         <div class="logo-slot"><img src="Tech hub.png" alt="Tech hub"></div>
       </div>
     </section>
     <div class="footer">IEEE AAST Cairo Student Branch · One family, many possibilities</div>
   </section>
 
-  <!-- Society Page Section: Success/Welcome Card View -->
+  <!-- Society Page Section: Success/Welcome Card View with 12-Photo Slider -->
   <section id="societyPage" class="page" aria-live="polite">
     <div class="welcome-card">
       <div class="ieee-mark">IEEE</div>
       <div class="theme-art" id="themeArt" aria-hidden="true"></div>
       <h2 id="welcomeTitle">Welcome!</h2>
       <p id="welcomeText"></p>
+
+      <!-- Recent Events & Memories Slider (13 Sliding Photo Slots) -->
+      <div class="events-slider-container">
+        <h3>Recent Events & Memories (Elsewedy, Engineering Gateway & REEPE)</h3>
+        <div class="slider-wrapper">
+          <div class="slider-track" id="sliderTrack">
+            <!-- Set 1 (13 slots with placeholders for file names) -->
+            <div class="event-slide-card"><img src="event1.jpg" alt="Event 1"></div>
+            <div class="event-slide-card"><img src="event2.jpg" alt="Event 2"></div>
+            <div class="event-slide-card"><img src="event3.jpg" alt="Event 3"></div>
+            <div class="event-slide-card"><img src="event4.jpg" alt="Event 4"></div>
+            <div class="event-slide-card"><img src="event5.jpg" alt="Event 5"></div>
+            <div class="event-slide-card"><img src="event6.jpg" alt="Event 6"></div>
+            <div class="event-slide-card"><img src="event7.jpg" alt="Event 7"></div>
+            <div class="event-slide-card"><img src="event8.jpg" alt="Event 8"></div>
+            <div class="event-slide-card"><img src="event9.jpg" alt="Event 9"></div>
+            <div class="event-slide-card"><img src="event10.jpg" alt="Event 10"></div>
+            <div class="event-slide-card"><img src="event11.jpg" alt="Event 11"></div>
+            <div class="event-slide-card"><img src="event12.jpg" alt="Event 12"></div>
+             <div class="event-slide-card"><img src="event13.jpg" alt="Event 13"></div>
+            
+            <!-- Duplicate Set for infinite seamless looping animation -->
+            <div class="event-slide-card"><img src="event1.jpg" alt="Event 1"></div>
+            <div class="event-slide-card"><img src="event2.jpg" alt="Event 2"></div>
+            <div class="event-slide-card"><img src="event3.jpg" alt="Event 3"></div>
+            <div class="event-slide-card"><img src="event4.jpg" alt="Event 4"></div>
+            <div class="event-slide-card"><img src="event5.jpg" alt="Event 5"></div>
+            <div class="event-slide-card"><img src="event6.jpg" alt="Event 6"></div>
+            <div class="event-slide-card"><img src="event7.jpg" alt="Event 7"></div>
+            <div class="event-slide-card"><img src="event8.jpg" alt="Event 8"></div>
+            <div class="event-slide-card"><img src="event9.jpg" alt="Event 9"></div>
+            <div class="event-slide-card"><img src="event10.jpg" alt="Event 10"></div>
+            <div class="event-slide-card"><img src="event11.jpg" alt="Event 11"></div>
+            <div class="event-slide-card"><img src="event12.jpg" alt="Event 12"></div>
+          </div>
+        </div>
+      </div>
+
       <button class="back" id="backButton" type="button">← Back to society selection</button>
     </div>
   </section>
@@ -370,11 +466,9 @@
 
   // Function to load and increment global visit count
   async function initMetrics() {
-    // 1. Load submissions count from localStorage
     let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
 
-    // 2. Fetch and count total website visits
     try {
       const response = await fetch('https://api.counterapi.dev/v1/ieee-aast-cairo/visits/hit');
       const data = await response.json();
@@ -394,10 +488,8 @@
     }
   }
 
-  // Initialize the dashboard metrics on load
   initMetrics();
 
-  // Function to trigger a flying emoji animation across the screen
   function flyEmoji(emoji) {
     const flyer = document.createElement('span');
     flyer.className = 'flyer';
@@ -407,7 +499,6 @@
     flyer.addEventListener('animationend', () => flyer.remove(), { once:true });
   }
 
-  // Function to create a particle burst effect when typing a name
   function burst() {
     for (let i = 0; i < 16; i++) {
       const dot = document.createElement('span');
@@ -421,24 +512,15 @@
     }
   }
 
-  // Event listener when user finishes entering their name
   nameInput.addEventListener('change', () => {
     if (nameInput.value.trim()) { flyEmoji('🎊'); burst(); }
   });
-  
-  nameInput.addEventListener('keydown', event => {
-    if (event.key === 'Enter') {
-      // Let the form's native validation and submit flow handle Enter.
-    }
-  });
 
-  // Handle form submission and transition to the customized society page
   form.addEventListener('submit', event => {
     event.preventDefault();
     const memberName = nameInput.value.trim();
     const selected = form.querySelector('input[name="society"]:checked');
     
-    // Validate inputs
     if (!memberName) { hint.textContent = 'Please enter your name to continue.'; nameInput.focus(); return; }
     if (!selected) { hint.textContent = 'Please choose one society to continue.'; return; }
     
@@ -446,38 +528,29 @@
     const data = societies[society];
     previousTheme = data.theme;
     
-    // Increment submission entry count
     let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10) + 1;
     localStorage.setItem('ieee_submissions_total', totalSubmissions);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
 
-    // Play custom audio file
     if (welcomeSound) {
       welcomeSound.currentTime = 0;
-      welcomeSound.play().catch(e => {
-        // Browser autoplay policy catch
-      });
+      welcomeSound.play().catch(e => {});
     }
 
-    // Trigger visual effects and populate content dynamically
     flyEmoji(data.emoji);
     hint.textContent = '';
     title.textContent = `Welcome to ${society}, ${memberName}!`;
     welcomeText.textContent = data.line;
     art.textContent = data.emoji;
     
-    // Switch views and update body background theme
     home.style.display = 'none';
     page.classList.add('active');
-    document.body.className = `theme-${data.theme}`;
     window.scrollTo({ top:0, behavior:'smooth' });
   });
 
-  // Handle returning back to the home/selection screen
   backButton.addEventListener('click', () => {
     page.classList.remove('active');
     home.style.display = '';
-    document.body.className = '';
     window.scrollTo({ top:0, behavior:'smooth' });
   });
 })();
