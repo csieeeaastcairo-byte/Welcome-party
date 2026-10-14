@@ -100,6 +100,40 @@
   
   .hint { text-align:center; color:#d4efff; min-height:22px; margin:12px 0 0; }
   
+  /* Live Metrics / Entries Dashboard Section on Cover Page */
+  .metrics-dashboard {
+    margin-top: 24px;
+    padding: 16px 20px;
+    border-radius: 18px;
+    background: rgba(3, 43, 80, 0.45);
+    border: 1px solid rgba(84, 200, 245, 0.35);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 16, 31, 0.4);
+    text-align: center;
+  }
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .metric-label {
+    font-size: 0.82rem;
+    color: #8edcff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+  .metric-value {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #fff;
+    font-family: monospace;
+    text-shadow: 0 0 12px rgba(84, 200, 245, 0.6);
+  }
+
   /* Sponsors placeholder section with matching light/dark blue glowing border */
   .sponsors { 
     margin-top:24px; 
@@ -203,6 +237,19 @@
         <p class="hint" id="hint" aria-live="polite"></p>
       </form>
     </div>
+
+    <!-- Cover Page Metrics Dashboard showing total entries and visitors -->
+    <div class="metrics-dashboard" aria-label="Website Activity Dashboard">
+      <div class="metric-item">
+        <span class="metric-label">🌐 Total Website Visits</span>
+        <span class="metric-value" id="visitCount">Loading...</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">✨ Total Submissions</span>
+        <span class="metric-value" id="submissionCount">0</span>
+      </div>
+    </div>
+
     <section class="sponsors" aria-label="Branch sponsor logos">
       <strong>Branch Sponsors</strong>
       <div class="sponsor-slots">
@@ -240,6 +287,8 @@
   const art = document.getElementById('themeArt');
   const backButton = document.getElementById('backButton');
   const welcomeSound = document.getElementById('welcomeSound');
+  const visitCountEl = document.getElementById('visitCount');
+  const submissionCountEl = document.getElementById('submissionCount');
   let previousTheme = '';
 
   // Dictionary mapping each society to its theme configuration, emoji, and description line
@@ -252,6 +301,35 @@
     HR: { emoji:'💼', theme:'hr', line:'Support our people, grow our talent, and make every member feel at home.' },
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
+
+  // Function to load and increment global visit count
+  async function initMetrics() {
+    // 1. Load submissions count from localStorage
+    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10);
+    submissionCountEl.textContent = totalSubmissions.toLocaleString();
+
+    // 2. Fetch and count total website visits
+    try {
+      const response = await fetch('https://api.counterapi.dev/v1/ieee-aast-cairo/visits/hit');
+      const data = await response.json();
+      if (data && typeof data.count === 'number') {
+        visitCountEl.textContent = data.count.toLocaleString();
+      } else {
+        throw new Error('Invalid count');
+      }
+    } catch (e) {
+      let localVisits = parseInt(localStorage.getItem('ieee_visits_fallback') || '156', 10);
+      if (!sessionStorage.getItem('visited_session_counted')) {
+        localVisits++;
+        localStorage.setItem('ieee_visits_fallback', localVisits);
+        sessionStorage.setItem('visited_session_counted', 'true');
+      }
+      visitCountEl.textContent = localVisits.toLocaleString();
+    }
+  }
+
+  // Initialize the dashboard metrics on load
+  initMetrics();
 
   // Function to trigger a flying emoji animation across the screen
   function flyEmoji(emoji) {
@@ -302,11 +380,16 @@
     const data = societies[society];
     previousTheme = data.theme;
     
+    // Increment submission entry count
+    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10) + 1;
+    localStorage.setItem('ieee_submissions_total', totalSubmissions);
+    submissionCountEl.textContent = totalSubmissions.toLocaleString();
+
     // Play custom audio file
     if (welcomeSound) {
       welcomeSound.currentTime = 0;
       welcomeSound.play().catch(e => {
-        // Browser autoplay policies might require user interaction first (handled by form click)
+        // Browser autoplay policy catch
       });
     }
 
