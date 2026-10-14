@@ -11,16 +11,27 @@
   /* Global reset and box-sizing */
   * { box-sizing:border-box; }
   
-  /* Page body styling with dynamic gradient background */
+  /* Page body styling with dynamic engineering grid and gradient background */
   body { margin:0; min-height:100vh; font-family:Arial,Helvetica,sans-serif; color:#fff;
-    background:radial-gradient(circle at 15% 15%, #167db3 0, transparent 35%),
-               linear-gradient(135deg,#041b35,#064a78 60%,#071d37);
+    background: 
+      radial-gradient(circle at 15% 15%, rgba(84, 200, 245, 0.2) 0, transparent 35%),
+      radial-gradient(circle at 85% 85%, rgba(0, 98, 155, 0.45) 0, transparent 45%),
+      linear-gradient(135deg,#020d1c,#041b35 55%,#063b65);
+    position: relative;
     overflow-x:hidden; }
-  
-  /* Background decorative text watermark */
-  body::before { content:"IEEE   IEEE   IEEE   IEEE"; position:fixed; inset:0; display:flex;
-    align-items:center; justify-content:center; font-weight:900; font-size:clamp(3rem,12vw,10rem);
-    color:rgba(255,255,255,.035); transform:rotate(-25deg); pointer-events:none; white-space:nowrap; z-index:0; }
+
+  /* Engineering circuit grid lines overlay */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(84, 200, 245, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(84, 200, 245, 0.07) 1px, transparent 1px);
+    background-size: 36px 36px;
+    pointer-events: none;
+    z-index: 0;
+  }
   
   /* Main content wrapper container */
   .shell { position:relative; z-index:1; width:min(960px,92%); margin:0 auto; padding:34px 0 26px; }
@@ -146,16 +157,14 @@
       <div class="sponsor-slots">
         <!-- First sponsor logo added here -->
         <div class="logo-slot"><img src="image_166237.png" alt="S' Society Sponsor Logo"></div>
-       <!-- Second sponsor logo added here -->
-        <div class="logo-slot"><img src="Tech hub.png" alt="Tech hub"></div>
         <!-- Second sponsor logo added here -->
-        <div class="logo-slot"><img src="bluraforce.jpeg" alt="Tech hub"></div>
+        <div class="logo-slot"><img src="Tech hub.png" alt="Tech hub"></div>
+        <!-- Third sponsor logo added here -->
+        <div class="logo-slot"><img src="bluraforce.jpeg" alt="Bluraforce"></div>
       </div>
     </section>
     <div class="footer">IEEE AAST Cairo Student Branch · One family, many possibilities</div>
   </section>
-
-  
 
   <!-- Society Page Section: Success/Welcome Card View -->
   <section id="societyPage" class="page" aria-live="polite">
@@ -210,7 +219,7 @@
       const dot = document.createElement('span');
       dot.className = 'sparkle';
       dot.style.left = (45 + Math.random() * 10) + 'vw';
-      dot.style.top = (40 + Math.random() * 20) + 'vh';
+      dot.style.top = (40 + Math.random() * 20) + 'vw';
       dot.style.setProperty('--dx', ((Math.random() - .5) * 260) + 'px');
       dot.style.setProperty('--dy', ((Math.random() - .5) * 220) + 'px');
       document.body.appendChild(dot);
