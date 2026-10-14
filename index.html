@@ -44,7 +44,7 @@
   /* Circular IEEE logo badge */
   .ieee-mark { display:inline-flex; align-items:center; justify-content:center; border:2px solid #8edcff; border-radius:50%; width:54px; height:54px; font-weight:900; color:#8edcff; letter-spacing:-2px; }
   
-  /* Translucent glassmorphism panel with light blue and white glowing border animation */
+  /* Translucent glassmorphism panel with light blue and dark blue glowing border animation */
   .panel { 
     background:rgba(255,255,255,.09); 
     border-radius:24px;
@@ -56,13 +56,13 @@
     background-clip: padding-box;
   }
   
-  /* Shimmering light blue and white border effect for the panel */
+  /* Shimmering light blue and dark blue border effect for the panel */
   .panel::before {
     content: '';
     position: absolute;
     inset: -2px;
     border-radius: 26px;
-    background: linear-gradient(135deg, #54c8f5, #ffffff, #00629B, #54c8f5);
+    background: linear-gradient(135deg, #54c8f5, #00629B, #032B50, #54c8f5);
     background-size: 300% 300%;
     z-index: -1;
     animation: borderGlow 4s ease infinite;
@@ -100,7 +100,7 @@
   
   .hint { text-align:center; color:#d4efff; min-height:22px; margin:12px 0 0; }
   
-  /* Sponsors placeholder section with matching glowing light border */
+  /* Sponsors placeholder section with matching light/dark blue glowing border */
   .sponsors { 
     margin-top:24px; 
     padding:18px; 
@@ -119,7 +119,7 @@
     position: absolute;
     inset: -2px;
     border-radius: 20px;
-    background: linear-gradient(135deg, #54c8f5, #ffffff, #00629B, #54c8f5);
+    background: linear-gradient(135deg, #54c8f5, #00629B, #032B50, #54c8f5);
     background-size: 300% 300%;
     z-index: -1;
     animation: borderGlow 4s ease infinite;
@@ -155,11 +155,11 @@
   body.theme-hr { background:radial-gradient(circle at 80% 15%,#477bd2,transparent 35%),linear-gradient(135deg,#101d3d,#164f72); }
   body.theme-branding { background:radial-gradient(circle at 80% 15%,#bc7a37,transparent 35%),linear-gradient(135deg,#211638,#075078); }
   
-  /* Keyframe animations for light-blue and white glowing border */
+  /* Keyframe animations for light-blue and dark-blue glowing border */
   @keyframes borderGlow {
-    0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2); }
-    50% { background-position: 100% 50%; box-shadow: 0 0 30px rgba(255, 255, 255, 0.7), inset 0 0 20px rgba(84, 200, 245, 0.5); }
-    100% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2); }
+    0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(0, 98, 155, 0.3); }
+    50% { background-position: 100% 50%; box-shadow: 0 0 25px rgba(0, 98, 155, 0.7), inset 0 0 15px rgba(84, 200, 245, 0.5); }
+    100% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(0, 98, 155, 0.3); }
   }
   @keyframes fadeDown { from{opacity:0;transform:translateY(-22px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeUp { from{opacity:0;transform:translateY(20px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
