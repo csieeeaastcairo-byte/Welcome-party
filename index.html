@@ -1067,6 +1067,8 @@
   </section>
 </main>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 (() => {
   const puzzleImageFilename = 'event1.jpeg';
@@ -1544,38 +1546,115 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
-  // PERSISTENT LOCKING LOGIC FOR 28 VISITS AND 26 SUBMISSIONS
-  function initMetrics() {
-    // Initialize storage if it doesn't exist yet, forcing 26 as the minimum baseline
-    let currentSubs = parseInt(localStorage.getItem('ieee_exact_subs') || '0', 10);
-    if (currentSubs < BASELINE_SUBMISSIONS) {
-      currentSubs = BASELINE_SUBMISSIONS;
-      localStorage.setItem('ieee_exact_subs', currentSubs);
-    }
+  // SHARED METRICS: Firebase Firestore synchronizes counts across browsers/devices.
+  // Replace these placeholders with your Firebase project's web app configuration.
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+  };
 
-    let currentVisits = parseInt(localStorage.getItem('ieee_exact_visits') || '0', 10);
-    if (currentVisits < BASELINE_VISITS) {
-      currentVisits = BASELINE_VISITS;
-      localStorage.setItem('ieee_exact_visits', currentVisits);
-    }
+  const metricsDocument = "websiteMetrics/global";
+  let metricsReady = false;
+  let metricsDb = null;
+  let visitIncrementStarted = false;
 
-    // Count this visit session once per browser session
-    if (!sessionStorage.getItem('session_counted_visit')) {
-      currentVisits++;
-      localStorage.setItem('ieee_exact_visits', currentVisits);
-      sessionStorage.setItem('session_counted_visit', 'true');
-    }
-
-    visitCountEl.textContent = currentVisits.toLocaleString();
-    submissionCountEl.textContent = currentSubs.toLocaleString();
+  function showMetrics(visits, submissions) {
+    visitCountEl.textContent = Number(visits || 0).toLocaleString();
+    submissionCountEl.textContent = Number(submissions || 0).toLocaleString();
   }
 
-  function incrementSubmissions() {
-    let currentSubs = parseInt(localStorage.getItem('ieee_exact_subs') || BASELINE_SUBMISSIONS, 10) + 1;
-    localStorage.setItem('ieee_exact_subs', currentSubs);
-    submissionCountEl.textContent = currentSubs.toLocaleString();
+  function validFirebaseConfig() {
+    return firebaseConfig.apiKey !== "YOUR_API_KEY" &&
+      firebaseConfig.projectId !== "YOUR_PROJECT_ID" &&
+      firebaseConfig.appId !== "YOUR_APP_ID";
   }
 
+  async function ensureMetricsDocument() {
+    const ref = metricsDb.doc(metricsDocument);
+    await metricsDb.runTransaction(async transaction => {
+      const snapshot = await transaction.get(ref);
+      if (!snapshot.exists) {
+        transaction.set(ref, {
+          visits: BASELINE_VISITS,
+          submissions: BASELINE_SUBMISSIONS,
+          initializedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else {
+        const data = snapshot.data() || {};
+        const updates = {};
+        if (!Number.isFinite(data.visits)) updates.visits = BASELINE_VISITS;
+        if (!Number.isFinite(data.submissions)) updates.submissions = BASELINE_SUBMISSIONS;
+        if (Object.keys(updates).length) transaction.update(ref, updates);
+      }
+    });
+    metricsReady = true;
+  }
+
+  async function incrementMetric(field) {
+    if (!metricsReady || !metricsDb) throw new Error("Shared metrics are not ready.");
+    const ref = metricsDb.doc(metricsDocument);
+    await metricsDb.runTransaction(async transaction => {
+      const snapshot = await transaction.get(ref);
+      if (!snapshot.exists) {
+        transaction.set(ref, {
+          visits: BASELINE_VISITS + (field === "visits" ? 1 : 0),
+          submissions: BASELINE_SUBMISSIONS + (field === "submissions" ? 1 : 0),
+          initializedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else {
+        const current = Number(snapshot.data()[field]);
+        transaction.update(ref, {
+          [field]: (Number.isFinite(current) ? current : (field === "visits" ? BASELINE_VISITS : BASELINE_SUBMISSIONS)) + 1
+        });
+      }
+    });
+  }
+
+  async function countVisitOncePerSession() {
+    if (visitIncrementStarted || sessionStorage.getItem("ieee_shared_visit_counted")) return;
+    visitIncrementStarted = true;
+    try {
+      await incrementMetric("visits");
+      sessionStorage.setItem("ieee_shared_visit_counted", "true");
+    } catch (error) {
+      visitIncrementStarted = false;
+      console.error("Could not count website visit:", error);
+    }
+  }
+
+  async function countAcceptedSubmission() {
+    try {
+      await incrementMetric("submissions");
+    } catch (error) {
+      console.error("Could not count form submission:", error);
+    }
+  }
+
+  async function initMetrics() {
+    if (!validFirebaseConfig()) {
+      console.error("Configure firebaseConfig before using shared cross-browser metrics.");
+      return;
+    }
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      metricsDb = firebase.firestore();
+      await ensureMetricsDocument();
+      metricsDb.doc(metricsDocument).onSnapshot(snapshot => {
+        if (snapshot.exists) {
+          const data = snapshot.data() || {};
+          showMetrics(data.visits, data.submissions);
+        }
+      }, error => console.error("Could not sync shared metrics:", error));
+      await countVisitOncePerSession();
+    } catch (error) {
+      console.error("Could not initialize shared metrics:", error);
+    }
+  }
+
+  // The accepted form handler calls this only after all validation succeeds.
+  window.recordAcceptedSubmission = countAcceptedSubmission;
   initMetrics();
 
   function flyEmoji(emoji) {
@@ -1636,7 +1715,7 @@
       circuitStatus.textContent = '';
     }
 
-    incrementSubmissions();
+    window.recordAcceptedSubmission();
 
     if (welcomeSound) {
       welcomeSound.currentTime = 0;
