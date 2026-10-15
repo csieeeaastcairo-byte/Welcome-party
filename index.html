@@ -1071,6 +1071,10 @@
 (() => {
   const puzzleImageFilename = 'event1.jpeg';
 
+  // GLOBALLY SCOPED BASELINE HISTORICAL VALUES
+  const BASELINE_VISITS = 28;
+  const BASELINE_SUBMISSIONS = 7;
+
   const form = document.getElementById('welcomeForm');
   const nameInput = document.getElementById('memberName');
   const hint = document.getElementById('hint');
@@ -1083,10 +1087,6 @@
   const welcomeSound = document.getElementById('welcomeSound');
   const visitCountEl = document.getElementById('visitCount');
   const submissionCountEl = document.getElementById('submissionCount');
-
-  // BASELINE HISTORICAL VALUES
-  const OLD_HISTORICAL_VISITS = 28;
-  const OLD_HISTORICAL_SUBMISSIONS = 7;
   
   // CS Game Elements
   const csGameSection = document.getElementById('csGameSection');
@@ -1544,37 +1544,39 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
-  // CROSS-BROWSER LIVE METRICS (SYNCED WITH BASELINE 28 VISITS & 7 SUBMISSIONS)
+  // CROSS-BROWSER DYNAMIC COUNT SYNCHRONIZATION
   async function initMetrics() {
-    const namespace = 'ieee_aast_cairo_2026_live_v28_7';
+    const namespace = 'ieee_aast_cairo_branch_sync_v28_7';
     const visitKey = 'visits';
     const subKey = 'submissions';
 
-    let totalVisits = OLD_HISTORICAL_VISITS;
-    let totalSubmissions = OLD_HISTORICAL_SUBMISSIONS;
+    let totalVisits = BASELINE_VISITS;
+    let totalSubmissions = BASELINE_SUBMISSIONS;
 
     try {
+      // Increment visit counter on every page visit
       const visitRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${visitKey}/up`);
       if (visitRes.ok) {
         const visitData = await visitRes.json();
-        totalVisits = OLD_HISTORICAL_VISITS + (visitData.count || 0);
+        totalVisits = BASELINE_VISITS + (visitData.count || 0);
       }
 
+      // Fetch current submissions count
       const subRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}`);
       if (subRes.ok) {
         const subData = await subRes.json();
-        totalSubmissions = OLD_HISTORICAL_SUBMISSIONS + (subData.count || 0);
+        totalSubmissions = BASELINE_SUBMISSIONS + (subData.count || 0);
       }
     } catch (err) {
-      // Offline Local Storage Fallback
+      // Fallback local calculation if offline
       let localVisits = parseInt(localStorage.getItem('ieee_branch_visits') || '0', 10);
       if (!sessionStorage.getItem('visited_session_counted')) {
         localVisits++;
         localStorage.setItem('ieee_branch_visits', localVisits);
         sessionStorage.setItem('visited_session_counted', 'true');
       }
-      totalVisits = OLD_HISTORICAL_VISITS + localVisits;
-      totalSubmissions = OLD_HISTORICAL_SUBMISSIONS + parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
+      totalVisits = BASELINE_VISITS + localVisits;
+      totalSubmissions = BASELINE_SUBMISSIONS + parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
     }
 
     visitCountEl.textContent = totalVisits.toLocaleString();
@@ -1582,21 +1584,21 @@
   }
 
   async function incrementSubmissions() {
-    const namespace = 'ieee_aast_cairo_2026_live_v28_7';
+    const namespace = 'ieee_aast_cairo_branch_sync_v28_7';
     const subKey = 'submissions';
     try {
       const res = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}/up`);
       if (res.ok) {
         const data = await res.json();
-        submissionCountEl.textContent = (OLD_HISTORICAL_SUBMISSIONS + data.count).toLocaleString();
+        submissionCountEl.textContent = (BASELINE_SUBMISSIONS + data.count).toLocaleString();
         return;
       }
     } catch (e) {}
 
-    // Offline Local Storage Fallback
+    // Fallback local update
     let localSub = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10) + 1;
     localStorage.setItem('ieee_submissions_total', localSub);
-    submissionCountEl.textContent = (OLD_HISTORICAL_SUBMISSIONS + localSub).toLocaleString();
+    submissionCountEl.textContent = (BASELINE_SUBMISSIONS + localSub).toLocaleString();
   }
 
   initMetrics();
