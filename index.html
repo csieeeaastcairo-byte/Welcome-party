@@ -1071,13 +1071,9 @@
 (() => {
   const puzzleImageFilename = 'event1.jpeg';
 
-  // EXACT HISTORICAL BASELINES
+  // PERMANENT BASELINE LOCKED AT 28 VISITS AND 26 SUBMISSIONS
   const BASELINE_VISITS = 28;
   const BASELINE_SUBMISSIONS = 26;
-
-  // PUBLIC ZERO-CONFIG CLOUD API ENDPOINTS
-  const SITE_KEY = 'ieee_aast_cairo_prod_v28_26';
-  const API_DOMAIN = 'api.countapi.xyz';
 
   const form = document.getElementById('welcomeForm');
   const nameInput = document.getElementById('memberName');
@@ -1548,29 +1544,39 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
-  // REAL-TIME INSTANT UNIFIED COUNTER LOGIC
-  async function fetchLiveCounts() {
-    let localSub = parseInt(localStorage.getItem('ieee_sub_count') || '0', 10);
-    let localVis = parseInt(localStorage.getItem('ieee_vis_count') || '0', 10);
-
-    // Track visit per session
-    if (!sessionStorage.getItem('ieee_session_v')) {
-      localVis++;
-      localStorage.setItem('ieee_vis_count', localVis);
-      sessionStorage.setItem('ieee_session_v', '1');
+  // PERSISTENT LOCKING LOGIC FOR 28 VISITS AND 26 SUBMISSIONS
+  function initMetrics() {
+    // Initialize storage if it doesn't exist yet, forcing 26 as the minimum baseline
+    let currentSubs = parseInt(localStorage.getItem('ieee_exact_subs') || '0', 10);
+    if (currentSubs < BASELINE_SUBMISSIONS) {
+      currentSubs = BASELINE_SUBMISSIONS;
+      localStorage.setItem('ieee_exact_subs', currentSubs);
     }
 
-    visitCountEl.textContent = (BASELINE_VISITS + localVis).toLocaleString();
-    submissionCountEl.textContent = (BASELINE_SUBMISSIONS + localSub).toLocaleString();
+    let currentVisits = parseInt(localStorage.getItem('ieee_exact_visits') || '0', 10);
+    if (currentVisits < BASELINE_VISITS) {
+      currentVisits = BASELINE_VISITS;
+      localStorage.setItem('ieee_exact_visits', currentVisits);
+    }
+
+    // Count this visit session once per browser session
+    if (!sessionStorage.getItem('session_counted_visit')) {
+      currentVisits++;
+      localStorage.setItem('ieee_exact_visits', currentVisits);
+      sessionStorage.setItem('session_counted_visit', 'true');
+    }
+
+    visitCountEl.textContent = currentVisits.toLocaleString();
+    submissionCountEl.textContent = currentSubs.toLocaleString();
   }
 
   function incrementSubmissions() {
-    let localSub = parseInt(localStorage.getItem('ieee_sub_count') || '0', 10) + 1;
-    localStorage.setItem('ieee_sub_count', localSub);
-    submissionCountEl.textContent = (BASELINE_SUBMISSIONS + localSub).toLocaleString();
+    let currentSubs = parseInt(localStorage.getItem('ieee_exact_subs') || BASELINE_SUBMISSIONS, 10) + 1;
+    localStorage.setItem('ieee_exact_subs', currentSubs);
+    submissionCountEl.textContent = currentSubs.toLocaleString();
   }
 
-  fetchLiveCounts();
+  initMetrics();
 
   function flyEmoji(emoji) {
     const flyer = document.createElement('span');
