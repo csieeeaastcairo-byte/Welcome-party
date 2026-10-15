@@ -99,40 +99,6 @@
   button:focus-visible { outline:3px solid #80e1ff; outline-offset:4px; }
   
   .hint { text-align:center; color:#d4efff; min-height:22px; margin:12px 0 0; }
-  
-  /* Live Metrics / Entries Dashboard Section on Cover Page */
-  .metrics-dashboard {
-    margin-top: 24px;
-    padding: 16px 20px;
-    border-radius: 18px;
-    background: rgba(3, 43, 80, 0.45);
-    border: 1px solid rgba(84, 200, 245, 0.35);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0, 16, 31, 0.4);
-    text-align: center;
-  }
-  .metric-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .metric-label {
-    font-size: 0.82rem;
-    color: #8edcff;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
-  }
-  .metric-value {
-    font-size: 1.6rem;
-    font-weight: 900;
-    color: #fff;
-    font-family: monospace;
-    text-shadow: 0 0 12px rgba(84, 200, 245, 0.6);
-  }
 
   /* Social Media Links Section */
   .social-section {
@@ -824,18 +790,6 @@
       </form>
     </div>
 
-    <!-- Cover Page Metrics Dashboard -->
-    <div class="metrics-dashboard" aria-label="Website Activity Dashboard">
-      <div class="metric-item">
-        <span class="metric-label">🌐 Total Website Visits</span>
-        <span class="metric-value" id="visitCount">28</span>
-      </div>
-      <div class="metric-item">
-        <span class="metric-label">✨ Total Submissions</span>
-        <span class="metric-value" id="submissionCount">26</span>
-      </div>
-    </div>
-
     <!-- Social Media Links Section -->
     <section class="social-section" aria-label="Social Media Links">
       <strong>Connect With Us</strong>
@@ -1067,15 +1021,9 @@
   </section>
 </main>
 
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 (() => {
   const puzzleImageFilename = 'event1.jpeg';
-
-  // PERMANENT BASELINE LOCKED AT 28 VISITS AND 26 SUBMISSIONS
-  const BASELINE_VISITS = 28;
-  const BASELINE_SUBMISSIONS = 26;
 
   const form = document.getElementById('welcomeForm');
   const nameInput = document.getElementById('memberName');
@@ -1087,8 +1035,6 @@
   const art = document.getElementById('themeArt');
   const backButton = document.getElementById('backButton');
   const welcomeSound = document.getElementById('welcomeSound');
-  const visitCountEl = document.getElementById('visitCount');
-  const submissionCountEl = document.getElementById('submissionCount');
   
   // CS Game Elements
   const csGameSection = document.getElementById('csGameSection');
@@ -1546,117 +1492,6 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
-  // SHARED METRICS: Firebase Firestore synchronizes counts across browsers/devices.
-  // Replace these placeholders with your Firebase project's web app configuration.
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  const metricsDocument = "websiteMetrics/global";
-  let metricsReady = false;
-  let metricsDb = null;
-  let visitIncrementStarted = false;
-
-  function showMetrics(visits, submissions) {
-    visitCountEl.textContent = Number(visits || 0).toLocaleString();
-    submissionCountEl.textContent = Number(submissions || 0).toLocaleString();
-  }
-
-  function validFirebaseConfig() {
-    return firebaseConfig.apiKey !== "YOUR_API_KEY" &&
-      firebaseConfig.projectId !== "YOUR_PROJECT_ID" &&
-      firebaseConfig.appId !== "YOUR_APP_ID";
-  }
-
-  async function ensureMetricsDocument() {
-    const ref = metricsDb.doc(metricsDocument);
-    await metricsDb.runTransaction(async transaction => {
-      const snapshot = await transaction.get(ref);
-      if (!snapshot.exists) {
-        transaction.set(ref, {
-          visits: BASELINE_VISITS,
-          submissions: BASELINE_SUBMISSIONS,
-          initializedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      } else {
-        const data = snapshot.data() || {};
-        const updates = {};
-        if (!Number.isFinite(data.visits)) updates.visits = BASELINE_VISITS;
-        if (!Number.isFinite(data.submissions)) updates.submissions = BASELINE_SUBMISSIONS;
-        if (Object.keys(updates).length) transaction.update(ref, updates);
-      }
-    });
-    metricsReady = true;
-  }
-
-  async function incrementMetric(field) {
-    if (!metricsReady || !metricsDb) throw new Error("Shared metrics are not ready.");
-    const ref = metricsDb.doc(metricsDocument);
-    await metricsDb.runTransaction(async transaction => {
-      const snapshot = await transaction.get(ref);
-      if (!snapshot.exists) {
-        transaction.set(ref, {
-          visits: BASELINE_VISITS + (field === "visits" ? 1 : 0),
-          submissions: BASELINE_SUBMISSIONS + (field === "submissions" ? 1 : 0),
-          initializedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      } else {
-        const current = Number(snapshot.data()[field]);
-        transaction.update(ref, {
-          [field]: (Number.isFinite(current) ? current : (field === "visits" ? BASELINE_VISITS : BASELINE_SUBMISSIONS)) + 1
-        });
-      }
-    });
-  }
-
-  async function countVisitOncePerSession() {
-    if (visitIncrementStarted || sessionStorage.getItem("ieee_shared_visit_counted")) return;
-    visitIncrementStarted = true;
-    try {
-      await incrementMetric("visits");
-      sessionStorage.setItem("ieee_shared_visit_counted", "true");
-    } catch (error) {
-      visitIncrementStarted = false;
-      console.error("Could not count website visit:", error);
-    }
-  }
-
-  async function countAcceptedSubmission() {
-    try {
-      await incrementMetric("submissions");
-    } catch (error) {
-      console.error("Could not count form submission:", error);
-    }
-  }
-
-  async function initMetrics() {
-    if (!validFirebaseConfig()) {
-      console.error("Configure firebaseConfig before using shared cross-browser metrics.");
-      return;
-    }
-    try {
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      metricsDb = firebase.firestore();
-      await ensureMetricsDocument();
-      metricsDb.doc(metricsDocument).onSnapshot(snapshot => {
-        if (snapshot.exists) {
-          const data = snapshot.data() || {};
-          showMetrics(data.visits, data.submissions);
-        }
-      }, error => console.error("Could not sync shared metrics:", error));
-      await countVisitOncePerSession();
-    } catch (error) {
-      console.error("Could not initialize shared metrics:", error);
-    }
-  }
-
-  // The accepted form handler calls this only after all validation succeeds.
-  window.recordAcceptedSubmission = countAcceptedSubmission;
-  initMetrics();
-
   function flyEmoji(emoji) {
     const flyer = document.createElement('span');
     flyer.className = 'flyer';
@@ -1714,8 +1549,6 @@
       });
       circuitStatus.textContent = '';
     }
-
-    window.recordAcceptedSubmission();
 
     if (welcomeSound) {
       welcomeSound.currentTime = 0;
