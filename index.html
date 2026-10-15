@@ -1071,7 +1071,7 @@
 (() => {
   const puzzleImageFilename = 'event1.jpeg';
 
-  // GLOBALLY SCOPED BASELINE HISTORICAL VALUES
+  // PERMANENT BASELINE HISTORICAL VALUES
   const BASELINE_VISITS = 28;
   const BASELINE_SUBMISSIONS = 7;
 
@@ -1544,39 +1544,39 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
-  // CROSS-BROWSER DYNAMIC COUNT SYNCHRONIZATION
+  // ROBUST CLOUD-SYNCED GLOBAL COUNTER ACROSS ALL BROWSERS
   async function initMetrics() {
-    const namespace = 'ieee_aast_cairo_branch_sync_v28_7';
-    const visitKey = 'visits';
-    const subKey = 'submissions';
-
+    const namespace = 'ieee_aast_cairo_global_v28_7';
+    
     let totalVisits = BASELINE_VISITS;
     let totalSubmissions = BASELINE_SUBMISSIONS;
 
     try {
-      // Increment visit counter on every page visit
-      const visitRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${visitKey}/up`);
-      if (visitRes.ok) {
-        const visitData = await visitRes.json();
-        totalVisits = BASELINE_VISITS + (visitData.count || 0);
+      // Only count once per visitor browser session globally
+      if (!sessionStorage.getItem('global_session_counted')) {
+        const res = await fetch(`https://api.counterapi.dev/v1/${namespace}/visits/up`);
+        if (res.ok) {
+          const data = await res.json();
+          totalVisits = BASELINE_VISITS + (data.count || 0);
+          sessionStorage.setItem('global_session_counted', 'true');
+        }
+      } else {
+        const res = await fetch(`https://api.counterapi.dev/v1/${namespace}/visits`);
+        if (res.ok) {
+          const data = await res.json();
+          totalVisits = BASELINE_VISITS + (data.count || 0);
+        }
       }
 
-      // Fetch current submissions count
-      const subRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}`);
+      const subRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/submissions`);
       if (subRes.ok) {
         const subData = await subRes.json();
         totalSubmissions = BASELINE_SUBMISSIONS + (subData.count || 0);
       }
     } catch (err) {
-      // Fallback local calculation if offline
-      let localVisits = parseInt(localStorage.getItem('ieee_branch_visits') || '0', 10);
-      if (!sessionStorage.getItem('visited_session_counted')) {
-        localVisits++;
-        localStorage.setItem('ieee_branch_visits', localVisits);
-        sessionStorage.setItem('visited_session_counted', 'true');
-      }
-      totalVisits = BASELINE_VISITS + localVisits;
-      totalSubmissions = BASELINE_SUBMISSIONS + parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
+      // Fallback if offline
+      totalVisits = BASELINE_VISITS + parseInt(localStorage.getItem('fallback_v') || '0', 10);
+      totalSubmissions = BASELINE_SUBMISSIONS + parseInt(localStorage.getItem('fallback_s') || '0', 10);
     }
 
     visitCountEl.textContent = totalVisits.toLocaleString();
@@ -1584,20 +1584,19 @@
   }
 
   async function incrementSubmissions() {
-    const namespace = 'ieee_aast_cairo_branch_sync_v28_7';
-    const subKey = 'submissions';
+    const namespace = 'ieee_aast_cairo_global_v28_7';
     try {
-      const res = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}/up`);
+      const res = await fetch(`https://api.counterapi.dev/v1/${namespace}/submissions/up`);
       if (res.ok) {
         const data = await res.json();
-        submissionCountEl.textContent = (BASELINE_SUBMISSIONS + data.count).toLocaleString();
+        submissionCountEl.textContent = (BASELINE_SUBMISSIONS + (data.count || 0)).toLocaleString();
         return;
       }
     } catch (e) {}
 
-    // Fallback local update
-    let localSub = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10) + 1;
-    localStorage.setItem('ieee_submissions_total', localSub);
+    // Offline fallback update
+    let localSub = parseInt(localStorage.getItem('fallback_s') || '0', 10) + 1;
+    localStorage.setItem('fallback_s', localSub);
     submissionCountEl.textContent = (BASELINE_SUBMISSIONS + localSub).toLocaleString();
   }
 
