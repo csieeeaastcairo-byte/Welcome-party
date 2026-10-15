@@ -828,7 +828,7 @@
     <div class="metrics-dashboard" aria-label="Website Activity Dashboard">
       <div class="metric-item">
         <span class="metric-label">🌐 Total Website Visits</span>
-        <span class="metric-value" id="visitCount">Loading...</span>
+        <span class="metric-value" id="visitCount">0</span>
       </div>
       <div class="metric-item">
         <span class="metric-label">✨ Total Submissions</span>
@@ -1044,6 +1044,8 @@
             <div class="event-slide-card"><img src="event10.jpeg" alt="Event 10"></div>
             <div class="event-slide-card"><img src="event11.jpeg" alt="Event 11"></div>
             <div class="event-slide-card"><img src="event12.jpeg" alt="Event 12"></div>
+            <div class="event-slide-card"><img src="event13.jpeg" alt="Event 13"></div>
+            
             <!-- Duplicate Set for infinite seamless looping animation -->
             <div class="event-slide-card"><img src="event1.jpeg" alt="Event 1"></div>
             <div class="event-slide-card"><img src="event2.jpeg" alt="Event 2"></div>
@@ -1057,6 +1059,7 @@
             <div class="event-slide-card"><img src="event10.jpeg" alt="Event 10"></div>
             <div class="event-slide-card"><img src="event11.jpeg" alt="Event 11"></div>
             <div class="event-slide-card"><img src="event12.jpeg" alt="Event 12"></div>
+            <div class="event-slide-card"><img src="event13.jpeg" alt="Event 13"></div>
           </div>
         </div>
       </div>
@@ -1068,7 +1071,7 @@
 
 <script>
 (() => {
-  // CONFIG: Change your puzzle image filename here[cite: 1]
+  // CONFIG: Change your puzzle image filename here
   const puzzleImageFilename = 'event1.jpeg';
 
   // DOM element references
@@ -1542,26 +1545,23 @@
   };
 
   async function initMetrics() {
+    // Force reset old cached values and start fresh from 0
+    if (!localStorage.getItem('ieee_reset_v3_done')) {
+      localStorage.removeItem('ieee_submissions_total');
+      localStorage.removeItem('ieee_branch_visits');
+      localStorage.setItem('ieee_reset_v3_done', 'true');
+    }
+
     let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
 
-    try {
-      const response = await fetch('https://api.counterapi.dev/v1/ieee-aast-cairo-v2/visits/hit');
-      const data = await response.json();
-      if (data && typeof data.count === 'number') {
-        visitCountEl.textContent = data.count.toLocaleString();
-      } else {
-        throw new Error('Invalid count');
-      }
-    } catch (e) {
-      let localVisits = parseInt(localStorage.getItem('ieee_visits_fallback') || '0', 10);
-      if (!sessionStorage.getItem('visited_session_counted')) {
-        localVisits++;
-        localStorage.setItem('ieee_visits_fallback', localVisits);
-        sessionStorage.setItem('visited_session_counted', 'true');
-      }
-      visitCountEl.textContent = localVisits.toLocaleString();
+    let localVisits = parseInt(localStorage.getItem('ieee_branch_visits') || '0', 10);
+    if (!sessionStorage.getItem('visited_session_counted')) {
+      localVisits++;
+      localStorage.setItem('ieee_branch_visits', localVisits);
+      sessionStorage.setItem('visited_session_counted', 'true');
     }
+    visitCountEl.textContent = localVisits.toLocaleString();
   }
 
   initMetrics();
