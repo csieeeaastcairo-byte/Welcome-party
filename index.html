@@ -828,11 +828,11 @@
     <div class="metrics-dashboard" aria-label="Website Activity Dashboard">
       <div class="metric-item">
         <span class="metric-label">🌐 Total Website Visits</span>
-        <span class="metric-value" id="visitCount">0</span>
+        <span class="metric-value" id="visitCount">28</span>
       </div>
       <div class="metric-item">
         <span class="metric-label">✨ Total Submissions</span>
-        <span class="metric-value" id="submissionCount">0</span>
+        <span class="metric-value" id="submissionCount">7</span>
       </div>
     </div>
 
@@ -1083,6 +1083,10 @@
   const welcomeSound = document.getElementById('welcomeSound');
   const visitCountEl = document.getElementById('visitCount');
   const submissionCountEl = document.getElementById('submissionCount');
+
+  // BASELINE HISTORICAL VALUES
+  const OLD_HISTORICAL_VISITS = 28;
+  const OLD_HISTORICAL_SUBMISSIONS = 7;
   
   // CS Game Elements
   const csGameSection = document.getElementById('csGameSection');
@@ -1540,54 +1544,59 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
-  // FULLY SYNCHRONIZED ACROSS ALL BROWSERS (CLOUD MEMORY API)
+  // CROSS-BROWSER LIVE METRICS (SYNCED WITH BASELINE 28 VISITS & 7 SUBMISSIONS)
   async function initMetrics() {
-    const namespace = 'ieee_aast_cairo_2026';
+    const namespace = 'ieee_aast_cairo_2026_live_v28_7';
     const visitKey = 'visits';
     const subKey = 'submissions';
 
-    let visits = 1;
-    let submissions = 0;
+    let totalVisits = OLD_HISTORICAL_VISITS;
+    let totalSubmissions = OLD_HISTORICAL_SUBMISSIONS;
 
     try {
-      // Connect to cloud storage memory shared by Chrome, Safari, Firefox, and mobile browsers
       const visitRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${visitKey}/up`);
       if (visitRes.ok) {
         const visitData = await visitRes.json();
-        visits = visitData.count;
+        totalVisits = OLD_HISTORICAL_VISITS + (visitData.count || 0);
       }
 
       const subRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}`);
       if (subRes.ok) {
         const subData = await subRes.json();
-        submissions = subData.count;
+        totalSubmissions = OLD_HISTORICAL_SUBMISSIONS + (subData.count || 0);
       }
     } catch (err) {
-      // Fallback if offline
-      visits = parseInt(localStorage.getItem('ieee_branch_visits') || '1', 10);
-      submissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
+      // Offline Local Storage Fallback
+      let localVisits = parseInt(localStorage.getItem('ieee_branch_visits') || '0', 10);
+      if (!sessionStorage.getItem('visited_session_counted')) {
+        localVisits++;
+        localStorage.setItem('ieee_branch_visits', localVisits);
+        sessionStorage.setItem('visited_session_counted', 'true');
+      }
+      totalVisits = OLD_HISTORICAL_VISITS + localVisits;
+      totalSubmissions = OLD_HISTORICAL_SUBMISSIONS + parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
     }
 
-    visitCountEl.textContent = visits.toLocaleString();
-    submissionCountEl.textContent = submissions.toLocaleString();
+    visitCountEl.textContent = totalVisits.toLocaleString();
+    submissionCountEl.textContent = totalSubmissions.toLocaleString();
   }
 
   async function incrementSubmissions() {
-    const namespace = 'ieee_aast_cairo_2026';
+    const namespace = 'ieee_aast_cairo_2026_live_v28_7';
     const subKey = 'submissions';
     try {
       const res = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}/up`);
       if (res.ok) {
         const data = await res.json();
-        submissionCountEl.textContent = data.count.toLocaleString();
+        submissionCountEl.textContent = (OLD_HISTORICAL_SUBMISSIONS + data.count).toLocaleString();
         return;
       }
     } catch (e) {}
 
-    // Fallback local update
-    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10) + 1;
-    localStorage.setItem('ieee_submissions_total', totalSubmissions);
-    submissionCountEl.textContent = totalSubmissions.toLocaleString();
+    // Offline Local Storage Fallback
+    let localSub = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10) + 1;
+    localStorage.setItem('ieee_submissions_total', localSub);
+    submissionCountEl.textContent = (OLD_HISTORICAL_SUBMISSIONS + localSub).toLocaleString();
   }
 
   initMetrics();
