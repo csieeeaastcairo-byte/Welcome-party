@@ -865,7 +865,7 @@
     <div class="footer">IEEE AAST Cairo Student Branch · One family, many possibilities</div>
   </section>
 
-  <!-- Society Page Section: Success/Welcome Card View with 13-Photo Slider -->
+  <!-- Society Page Section: Success/Welcome Card View with Slider -->
   <section id="societyPage" class="page" aria-live="polite">
     <div class="welcome-card">
       <div class="ieee-mark">IEEE</div>
@@ -1031,7 +1031,7 @@
         <h3>Recent Events & Memories (Elsewedy, Engineering Gateway & REEPE)</h3>
         <div class="slider-wrapper">
           <div class="slider-track" id="sliderTrack">
-            <!-- Set 1 (13 slots) -->
+            <!-- Set 1 (12 slots) -->
             <div class="event-slide-card"><img src="event1.jpeg" alt="Event 1"></div>
             <div class="event-slide-card"><img src="event2.jpeg" alt="Event 2"></div>
             <div class="event-slide-card"><img src="event3.jpeg" alt="Event 3"></div>
@@ -1044,7 +1044,6 @@
             <div class="event-slide-card"><img src="event10.jpeg" alt="Event 10"></div>
             <div class="event-slide-card"><img src="event11.jpeg" alt="Event 11"></div>
             <div class="event-slide-card"><img src="event12.jpeg" alt="Event 12"></div>
-           
             
             <!-- Duplicate Set for infinite seamless looping animation -->
             <div class="event-slide-card"><img src="event1.jpeg" alt="Event 1"></div>
@@ -1059,7 +1058,6 @@
             <div class="event-slide-card"><img src="event10.jpeg" alt="Event 10"></div>
             <div class="event-slide-card"><img src="event11.jpeg" alt="Event 11"></div>
             <div class="event-slide-card"><img src="event12.jpeg" alt="Event 12"></div>
-           
           </div>
         </div>
       </div>
@@ -1071,10 +1069,8 @@
 
 <script>
 (() => {
-  // CONFIG: Change your puzzle image filename here
   const puzzleImageFilename = 'event1.jpeg';
 
-  // DOM element references
   const form = document.getElementById('welcomeForm');
   const nameInput = document.getElementById('memberName');
   const hint = document.getElementById('hint');
@@ -1544,24 +1540,54 @@
     Branding: { emoji:'💡🎨', theme:'branding', line:'Give our ideas a voice and our branch a visual identity.' }
   };
 
+  // FULLY SYNCHRONIZED ACROSS ALL BROWSERS (CLOUD MEMORY API)
   async function initMetrics() {
-    // Force reset old cached values and start fresh from 0
-    if (!localStorage.getItem('ieee_reset_v3_done')) {
-      localStorage.removeItem('ieee_submissions_total');
-      localStorage.removeItem('ieee_branch_visits');
-      localStorage.setItem('ieee_reset_v3_done', 'true');
+    const namespace = 'ieee_aast_cairo_2026';
+    const visitKey = 'visits';
+    const subKey = 'submissions';
+
+    let visits = 1;
+    let submissions = 0;
+
+    try {
+      // Connect to cloud storage memory shared by Chrome, Safari, Firefox, and mobile browsers
+      const visitRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${visitKey}/up`);
+      if (visitRes.ok) {
+        const visitData = await visitRes.json();
+        visits = visitData.count;
+      }
+
+      const subRes = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}`);
+      if (subRes.ok) {
+        const subData = await subRes.json();
+        submissions = subData.count;
+      }
+    } catch (err) {
+      // Fallback if offline
+      visits = parseInt(localStorage.getItem('ieee_branch_visits') || '1', 10);
+      submissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
     }
 
-    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
+    visitCountEl.textContent = visits.toLocaleString();
+    submissionCountEl.textContent = submissions.toLocaleString();
+  }
+
+  async function incrementSubmissions() {
+    const namespace = 'ieee_aast_cairo_2026';
+    const subKey = 'submissions';
+    try {
+      const res = await fetch(`https://api.counterapi.dev/v1/${namespace}/${subKey}/up`);
+      if (res.ok) {
+        const data = await res.json();
+        submissionCountEl.textContent = data.count.toLocaleString();
+        return;
+      }
+    } catch (e) {}
+
+    // Fallback local update
+    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10) + 1;
+    localStorage.setItem('ieee_submissions_total', totalSubmissions);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
-
-    let localVisits = parseInt(localStorage.getItem('ieee_branch_visits') || '0', 10);
-    if (!sessionStorage.getItem('visited_session_counted')) {
-      localVisits++;
-      localStorage.setItem('ieee_branch_visits', localVisits);
-      sessionStorage.setItem('visited_session_counted', 'true');
-    }
-    visitCountEl.textContent = localVisits.toLocaleString();
   }
 
   initMetrics();
@@ -1624,9 +1650,7 @@
       circuitStatus.textContent = '';
     }
 
-    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10) + 1;
-    localStorage.setItem('ieee_submissions_total', totalSubmissions);
-    submissionCountEl.textContent = totalSubmissions.toLocaleString();
+    incrementSubmissions();
 
     if (welcomeSound) {
       welcomeSound.currentTime = 0;
