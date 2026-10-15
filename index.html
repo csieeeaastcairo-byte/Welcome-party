@@ -1542,11 +1542,11 @@
   };
 
   async function initMetrics() {
-    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10);
+    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
 
     try {
-      const response = await fetch('https://api.counterapi.dev/v1/ieee-aast-cairo/visits/hit');
+      const response = await fetch('https://api.counterapi.dev/v1/ieee-aast-cairo-v2/visits/hit');
       const data = await response.json();
       if (data && typeof data.count === 'number') {
         visitCountEl.textContent = data.count.toLocaleString();
@@ -1554,7 +1554,7 @@
         throw new Error('Invalid count');
       }
     } catch (e) {
-      let localVisits = parseInt(localStorage.getItem('ieee_visits_fallback') || '156', 10);
+      let localVisits = parseInt(localStorage.getItem('ieee_visits_fallback') || '0', 10);
       if (!sessionStorage.getItem('visited_session_counted')) {
         localVisits++;
         localStorage.setItem('ieee_visits_fallback', localVisits);
@@ -1624,7 +1624,7 @@
       circuitStatus.textContent = '';
     }
 
-    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '18', 10) + 1;
+    let totalSubmissions = parseInt(localStorage.getItem('ieee_submissions_total') || '0', 10) + 1;
     localStorage.setItem('ieee_submissions_total', totalSubmissions);
     submissionCountEl.textContent = totalSubmissions.toLocaleString();
 
