@@ -685,7 +685,7 @@
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    background-size: 270px 225px; /* 3x grid dimensions */
+    background-size: 270px 225px;
     transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
   }
   .puzzle-tile:hover {
@@ -773,7 +773,7 @@
   /* Keyframe animations */
   @keyframes scrollLeft {
     0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-140px * 13 - 15px * 13)); }
+    100% { transform: translateX(-50%); }
   }
   @keyframes borderGlow {
     0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(84, 200, 245, 0.4), inset 0 0 10px rgba(0, 98, 155, 0.3); }
@@ -1353,7 +1353,6 @@
   let selectedTileIndex = null;
 
   function initPuzzleGame() {
-    // Shuffle tiles ensuring they aren't already solved
     do {
       puzzleTiles.sort(() => Math.random() - 0.5);
     } while (puzzleTiles.every((val, idx) => val === idx));
@@ -1373,7 +1372,6 @@
         tile.classList.add('selected-tile');
       }
 
-      // Calculate background position based on original tileValue (0 to 8)
       const col = tileValue % 3;
       const row = Math.floor(tileValue / 3);
       tile.style.backgroundImage = `url('${puzzleImageFilename}')`;
@@ -1390,7 +1388,6 @@
       puzzleStatus.textContent = 'Selected! Now click another tile to swap.';
       renderPuzzleGrid();
     } else {
-      // Swap tiles
       const temp = puzzleTiles[selectedTileIndex];
       puzzleTiles[selectedTileIndex] = puzzleTiles[index];
       puzzleTiles[index] = temp;
@@ -1398,7 +1395,6 @@
 
       renderPuzzleGrid();
 
-      // Check if solved
       const isSolved = puzzleTiles.every((val, idx) => val === idx);
       if (isSolved) {
         puzzleStatus.style.color = '#34d399';
