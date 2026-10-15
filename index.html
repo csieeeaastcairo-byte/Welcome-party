@@ -651,6 +651,52 @@
     opacity: 0.5;
   }
 
+  /* HR & Branding Team Photo Puzzle Game Styling */
+  .hr-puzzle-box {
+    margin: 25px 0;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(2, 13, 28, 0.85);
+    border: 1px solid rgba(71, 123, 210, 0.6);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .hr-puzzle-box h3 {
+    margin: 0 0 6px;
+    color: #93c5fd;
+    font-size: 1.15rem;
+  }
+  .puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
+    grid-template-rows: repeat(3, 75px);
+    gap: 4px;
+    justify-content: center;
+    margin: 15px auto;
+    background: #010a15;
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(84, 200, 245, 0.4);
+    width: max-content;
+  }
+  .puzzle-tile {
+    width: 90px;
+    height: 75px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    background-size: 270px 225px; /* 3x grid dimensions */
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+  .puzzle-tile:hover {
+    border-color: #54c8f5;
+    transform: scale(1.03);
+  }
+  .puzzle-tile.selected-tile {
+    border-color: #f59e0b;
+    box-shadow: 0 0 12px #f59e0b;
+  }
+
   /* Recent Events Slider Section inside Society Page */
   .events-slider-container {
     margin: 25px 0 20px;
@@ -909,7 +955,6 @@
         <h3>⚡ IES Challenge: Build the Circuit Schematic!</h3>
         <p style="font-size: 0.84rem; color: #cceeff; margin-bottom: 6px;">Place components correctly to complete the loop: <strong>1 Battery 🔋, 1 Resistor ⚡, 1 Transistor 🎛️, 1 Bulb 💡, 4 Horizontal Wires ──, 2 Vertical Wires │</strong></p>
         
-        <!-- Toolbar for selecting components -->
         <div class="circuit-toolbar">
           <button type="button" class="tool-btn active-tool" data-tool="🔋">🔋 Battery</button>
           <button type="button" class="tool-btn" data-tool="⚡">⚡ Resistor</button>
@@ -920,7 +965,6 @@
           <button type="button" class="tool-btn" data-tool="🗑️" style="background:#421111;">🗑️ Clear</button>
         </div>
 
-        <!-- 2D Circuit Schematic Grid -->
         <div class="circuit-schematic-grid" id="schematicGrid">
           <div class="schematic-node" data-idx="0"></div>
           <div class="schematic-node" data-idx="1"></div>
@@ -968,6 +1012,19 @@
         <div class="circuit-status" id="eventsStatus" style="margin-top: 10px;">Select Step 1 to begin the loop!</div>
       </div>
 
+      <!-- HR & Branding Team Photo Puzzle Game -->
+      <div id="hrBrandingGameSection" class="hr-puzzle-box" style="display:none;">
+        <h3>💼🎨 Teamwork Puzzle: Reassemble the Family Photo!</h3>
+        <p style="font-size: 0.86rem; color: #cceeff; margin-bottom: 6px;">Click two tiles to swap them until the team photo is fully restored:</p>
+        
+        <div class="puzzle-grid" id="puzzleGrid"></div>
+
+        <div class="circuit-actions">
+          <button type="button" class="action-btn" id="resetPuzzleBtn" style="background:#032B50; border-color:#8edcff;">🔄 Shuffle Puzzle</button>
+        </div>
+        <div class="circuit-status" id="puzzleStatus" style="margin-top: 10px;">Click any tile to begin swapping!</div>
+      </div>
+
       <!-- Recent Events & Memories Slider -->
       <div class="events-slider-container">
         <h3>Recent Events & Memories (Elsewedy, Engineering Gateway & REEPE)</h3>
@@ -1013,6 +1070,9 @@
 
 <script>
 (() => {
+  // CONFIG: Easily change your puzzle image filename here[cite: 1]
+  const puzzleImageFilename = 'event1.jpeg';
+
   // DOM element references
   const form = document.getElementById('welcomeForm');
   const nameInput = document.getElementById('memberName');
@@ -1216,7 +1276,7 @@
   ];
 
   let currentLoopStep = 1;
-  const totalCircumference = 2 * Math.PI * 120; // Radius = 120
+  const totalCircumference = 2 * Math.PI * 120;
 
   function initEventsGame() {
     currentLoopStep = 1;
@@ -1230,11 +1290,9 @@
   }
 
   function renderRingNodes() {
-    // Remove existing nodes
     const existing = eventRingContainer.querySelectorAll('.event-ring-node');
     existing.forEach(el => el.remove());
 
-    // Shuffle steps for positioning around ring
     const shuffled = [...correctEventOrder].sort(() => Math.random() - 0.5);
     const total = shuffled.length;
     const radius = 120;
@@ -1284,6 +1342,75 @@
   }
 
   resetEventsBtn.onclick = initEventsGame;
+
+  // HR & Branding Team Photo Puzzle Game Logic
+  const hrBrandingGameSection = document.getElementById('hrBrandingGameSection');
+  const puzzleGrid = document.getElementById('puzzleGrid');
+  const resetPuzzleBtn = document.getElementById('resetPuzzleBtn');
+  const puzzleStatus = document.getElementById('puzzleStatus');
+
+  let puzzleTiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  let selectedTileIndex = null;
+
+  function initPuzzleGame() {
+    // Shuffle tiles ensuring they aren't already solved
+    do {
+      puzzleTiles.sort(() => Math.random() - 0.5);
+    } while (puzzleTiles.every((val, idx) => val === idx));
+
+    selectedTileIndex = null;
+    puzzleStatus.style.color = '#93c5fd';
+    puzzleStatus.textContent = 'Click two tiles to swap their positions!';
+    renderPuzzleGrid();
+  }
+
+  function renderPuzzleGrid() {
+    puzzleGrid.innerHTML = '';
+    puzzleTiles.forEach((tileValue, currentIndex) => {
+      const tile = document.createElement('div');
+      tile.className = 'puzzle-tile';
+      if (selectedTileIndex === currentIndex) {
+        tile.classList.add('selected-tile');
+      }
+
+      // Calculate background position based on original tileValue (0 to 8)
+      const col = tileValue % 3;
+      const row = Math.floor(tileValue / 3);
+      tile.style.backgroundImage = `url('${puzzleImageFilename}')`;
+      tile.style.backgroundPosition = `-${col * 90}px -${row * 75}px`;
+
+      tile.onclick = () => handleTileClick(currentIndex);
+      puzzleGrid.appendChild(tile);
+    });
+  }
+
+  function handleTileClick(index) {
+    if (selectedTileIndex === null) {
+      selectedTileIndex = index;
+      puzzleStatus.textContent = 'Selected! Now click another tile to swap.';
+      renderPuzzleGrid();
+    } else {
+      // Swap tiles
+      const temp = puzzleTiles[selectedTileIndex];
+      puzzleTiles[selectedTileIndex] = puzzleTiles[index];
+      puzzleTiles[index] = temp;
+      selectedTileIndex = null;
+
+      renderPuzzleGrid();
+
+      // Check if solved
+      const isSolved = puzzleTiles.every((val, idx) => val === idx);
+      if (isSolved) {
+        puzzleStatus.style.color = '#34d399';
+        puzzleStatus.textContent = '🎉 Amazing! Team photo successfully reassembled!';
+        for(let i=0; i<12; i++) flyEmoji('💼');
+      } else {
+        puzzleStatus.textContent = 'Click two tiles to swap their positions!';
+      }
+    }
+  }
+
+  resetPuzzleBtn.onclick = initPuzzleGame;
 
   // Maze layout setup
   const initialMaze = [
@@ -1487,11 +1614,13 @@
     pesGameSection.style.display = (society === 'PES') ? 'block' : 'none';
     iesGameSection.style.display = (society === 'IES') ? 'block' : 'none';
     eventsGameSection.style.display = (society === 'Events') ? 'block' : 'none';
+    hrBrandingGameSection.style.display = (society === 'HR' || society === 'Branding') ? 'block' : 'none';
 
     if (society === 'CS') loadPuzzle();
     if (society === 'RAS') initMaze();
     if (society === 'PES') initPesGame();
     if (society === 'Events') initEventsGame();
+    if (society === 'HR' || society === 'Branding') initPuzzleGame();
     if (society === 'IES') {
       schematicNodes.forEach(node => {
         node.textContent = '';
