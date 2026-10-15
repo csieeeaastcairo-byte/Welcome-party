@@ -534,6 +534,123 @@
     min-height: 22px;
   }
 
+  /* Events Circular Ring Loop Game Styling */
+  .events-game-box {
+    margin: 25px 0;
+    padding: 22px;
+    border-radius: 18px;
+    background: rgba(2, 13, 28, 0.85);
+    border: 1px solid rgba(196, 77, 145, 0.6);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .events-game-box h3 {
+    margin: 0 0 6px;
+    color: #f472b6;
+    font-size: 1.2rem;
+  }
+  
+  .event-ring-container {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    margin: 25px auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196, 77, 145, 0.08) 0%, transparent 70%);
+  }
+  
+  .loop-ring-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .loop-circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.15);
+    stroke-width: 3;
+    stroke-dasharray: 6 6;
+  }
+  .loop-circle-progress {
+    fill: none;
+    stroke: #f472b6;
+    stroke-width: 5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease;
+    filter: drop-shadow(0 0 8px #f472b6);
+  }
+
+  .event-center-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(1, 10, 21, 0.9);
+    border: 2px solid #f472b6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 0 20px rgba(244, 114, 182, 0.3);
+  }
+  .event-hub-title {
+    font-size: 0.72rem;
+    color: #8edcff;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+  }
+  .event-hub-step {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #fff;
+  }
+
+  .event-ring-node {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 78px;
+    height: 40px;
+    margin-top: -20px;
+    margin-left: -39px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: transform 0.3s, background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    user-select: none;
+  }
+  .event-ring-node:hover {
+    background: rgba(244, 114, 182, 0.3);
+    border-color: #f472b6;
+    transform: scale(1.1) !important;
+  }
+  .event-ring-node.active-node {
+    background: #00629B;
+    border-color: #54c8f5;
+    box-shadow: 0 0 12px #54c8f5;
+    color: #fff;
+  }
+  .event-ring-node.completed-node {
+    background: rgba(244, 114, 182, 0.4);
+    border-color: #f472b6;
+    opacity: 0.5;
+  }
+
   /* Recent Events Slider Section inside Society Page */
   .events-slider-container {
     margin: 25px 0 20px;
@@ -829,6 +946,28 @@
         <div class="circuit-status" id="circuitStatus"></div>
       </div>
 
+      <!-- Events Circular Ring Loop Game -->
+      <div id="eventsGameSection" class="events-game-box" style="display:none;">
+        <h3>👥 Events Challenge: Connect the Lifecycle Ring Loop!</h3>
+        <p style="font-size: 0.86rem; color: #cceeff; margin-bottom: 6px;">Click the lifecycle steps around the circle in the correct chronological order to complete the loop:</p>
+        
+        <div class="event-ring-container" id="eventRingContainer">
+          <svg class="loop-ring-svg" viewBox="0 0 320 320">
+            <circle class="loop-circle-bg" cx="160" cy="160" r="120"></circle>
+            <circle class="loop-circle-progress" id="loopProgressCircle" cx="160" cy="160" r="120" stroke-dasharray="753.98" stroke-dashoffset="753.98" transform="rotate(-90 160 160)"></circle>
+          </svg>
+          <div class="event-center-hub">
+            <span class="event-hub-title">Progress</span>
+            <span class="event-hub-step" id="eventHubStep">0 / 7</span>
+          </div>
+        </div>
+
+        <div class="circuit-actions">
+          <button type="button" class="action-btn" id="resetEventsBtn" style="background:#032B50; border-color:#8edcff;">🔄 Reset Loop</button>
+        </div>
+        <div class="circuit-status" id="eventsStatus" style="margin-top: 10px;">Select Step 1 to begin the loop!</div>
+      </div>
+
       <!-- Recent Events & Memories Slider -->
       <div class="events-slider-container">
         <h3>Recent Events & Memories (Elsewedy, Engineering Gateway & REEPE)</h3>
@@ -936,7 +1075,6 @@
   ];
 
   function initPesGame() {
-    // Pick random target demand between 70 MW and 150 MW
     currentTargetDemand = Math.floor(Math.random() * 80) + 70;
     const scenario = weatherScenarios[Math.floor(Math.random() * weatherScenarios.length)];
     weatherMultipliers = scenario;
@@ -944,13 +1082,11 @@
     pesDemandVal.textContent = `${currentTargetDemand} MW`;
     pesWeatherVal.textContent = scenario.name;
 
-    // Reset sliders
     solarSlider.value = 0;
     windSlider.value = 0;
     hydroSlider.value = 0;
     batterySlider.value = 0;
 
-    // Position target line on bar (max capacity = 200 MW)
     const targetPercent = (currentTargetDemand / 200) * 100;
     pesTargetLine.style.left = `${targetPercent}%`;
 
@@ -1061,7 +1197,95 @@
     circuitStatus.textContent = '';
   });
 
-  // Maze layout (0: path, 1: wall, 2: robot start, 3: finish flag)
+  // Circular Ring Loop Events Mini-Game Logic
+  const eventsGameSection = document.getElementById('eventsGameSection');
+  const eventRingContainer = document.getElementById('eventRingContainer');
+  const loopProgressCircle = document.getElementById('loopProgressCircle');
+  const eventHubStep = document.getElementById('eventHubStep');
+  const resetEventsBtn = document.getElementById('resetEventsBtn');
+  const eventsStatus = document.getElementById('eventsStatus');
+
+  const correctEventOrder = [
+    { step: 1, name: "1. Planning" },
+    { step: 2, name: "2. Budgeting" },
+    { step: 3, name: "3. Venue" },
+    { step: 4, name: "4. Marketing" },
+    { step: 5, name: "5. Registration" },
+    { step: 6, name: "6. Event" },
+    { step: 7, name: "7. Feedback" }
+  ];
+
+  let currentLoopStep = 1;
+  const totalCircumference = 2 * Math.PI * 120; // Radius = 120
+
+  function initEventsGame() {
+    currentLoopStep = 1;
+    eventsStatus.style.color = '#cceeff';
+    eventsStatus.textContent = 'Click Step 1 (Planning) to start connecting the loop!';
+    eventHubStep.textContent = '0 / 7';
+    loopProgressCircle.style.strokeDashoffset = totalCircumference;
+    loopProgressCircle.style.stroke = '#f472b6';
+
+    renderRingNodes();
+  }
+
+  function renderRingNodes() {
+    // Remove existing nodes
+    const existing = eventRingContainer.querySelectorAll('.event-ring-node');
+    existing.forEach(el => el.remove());
+
+    // Shuffle steps for positioning around ring
+    const shuffled = [...correctEventOrder].sort(() => Math.random() - 0.5);
+    const total = shuffled.length;
+    const radius = 120;
+
+    shuffled.forEach((item, idx) => {
+      const angle = (idx * (360 / total) - 90) * (Math.PI / 180);
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+
+      const node = document.createElement('div');
+      node.className = 'event-ring-node';
+      node.textContent = item.name;
+      node.style.transform = `translate(${x}px, ${y}px)`;
+      node.dataset.step = item.step;
+
+      node.onclick = () => handleRingClick(item.step, node);
+      eventRingContainer.appendChild(node);
+    });
+  }
+
+  function handleRingClick(step, node) {
+    if (step === currentLoopStep) {
+      node.classList.add('completed-node');
+      
+      const progressPercent = currentLoopStep / 7;
+      const dashoffset = totalCircumference * (1 - progressPercent);
+      loopProgressCircle.style.strokeDashoffset = dashoffset;
+      eventHubStep.textContent = `${currentLoopStep} / 7`;
+
+      if (currentLoopStep === 7) {
+        eventsStatus.style.color = '#34d399';
+        eventsStatus.textContent = '🎉 Congratulations! You completed the Event Lifecycle Ring Loop!';
+        loopProgressCircle.style.stroke = '#34d399';
+        for(let i=0; i<12; i++) flyEmoji('👥');
+      } else {
+        currentLoopStep++;
+        eventsStatus.style.color = '#54c8f5';
+        eventsStatus.textContent = `✨ Correct! Next, select Step ${currentLoopStep}...`;
+      }
+    } else if (step < currentLoopStep) {
+      eventsStatus.style.color = '#f59e0b';
+      eventsStatus.textContent = '⚠️ This step is already placed in the loop!';
+    } else {
+      eventsStatus.style.color = '#ef4444';
+      eventsStatus.textContent = `❌ Out of sequence! Look for Step ${currentLoopStep} next.`;
+    }
+  }
+
+  resetEventsBtn.onclick = initEventsGame;
+
+  // Maze layout setup
   const initialMaze = [
     [2, 0, 1, 0, 0, 0],
     [1, 0, 1, 0, 1, 0],
@@ -1141,7 +1365,6 @@
     }
   });
 
-  // Beginner-friendly Python Puzzles for CS
   const pythonPuzzles = [
     { 
       prompt: "Question 1: What will Python print out when we run this text?", 
@@ -1187,7 +1410,6 @@
     }
   };
 
-  // Dictionary mapping each society to its theme configuration, emoji, and description line
   const societies = {
     CS: { emoji:'🖥️', theme:'cs', line:'Build, code, create—and turn bold ideas into reality.' },
     RAS: { emoji:'🤖', theme:'ras', line:'Explore robotics, intelligent machines, and the future of automation.' },
@@ -1260,15 +1482,16 @@
     const society = selected.value;
     const data = societies[society];
     
-    // Show or hide specific games based on selected society
     csGameSection.style.display = (society === 'CS') ? 'block' : 'none';
     rasGameSection.style.display = (society === 'RAS') ? 'block' : 'none';
     pesGameSection.style.display = (society === 'PES') ? 'block' : 'none';
     iesGameSection.style.display = (society === 'IES') ? 'block' : 'none';
+    eventsGameSection.style.display = (society === 'Events') ? 'block' : 'none';
 
     if (society === 'CS') loadPuzzle();
     if (society === 'RAS') initMaze();
     if (society === 'PES') initPesGame();
+    if (society === 'Events') initEventsGame();
     if (society === 'IES') {
       schematicNodes.forEach(node => {
         node.textContent = '';
